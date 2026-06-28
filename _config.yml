@@ -1,14 +1,30 @@
 title: "Edgardo | Espacio Profesional y Personal"
 description: "Cátedras de Ingeniería y Espacio Personal"
 
-# Tema nativo ultra-limpio y altamente compatible
+# Tema nativo ultra-limpio
 theme: jekyll-theme-minimal
 
-# Forzamos la paleta de colores inyectando estilos CSS directamente
-# para asegurar que tome el azul y cian de la UTN Avellaneda
+# Inyección de CSS para forzar el Modo Oscuro Completo con acentos UTN
 inline_css: >
-  header { background-color: #005a9c !important; }
+  body { background-color: #0d1117 !important; color: #c9d1d9 !important; }
+  h1, h2, h3, h4, h5, h6 { color: #ffffff !important; }
+  
+  /* Encabezado con el Azul UTN de base, adaptado para fondo oscuro */
+  header { background-color: #0f2744 !important; border-bottom: 1px solid #30363d; }
   .project-name { color: #ffffff !important; }
-  .project-tagline { color: #008294 !important; }
-  a { color: #005a9c; }
-  .btn { background-color: #008294 !important; border-color: #008294 !important; }
+  .project-tagline { color: #58a6ff !important; }
+  
+  /* Enlaces y navegación */
+  a { color: #58a6ff !important; }
+  a:hover { text-decoration: underline; }
+  
+  /* Código y bloques técnicos */
+  code { background-color: #161b22 !important; color: #ff7b72 !important; border: 1px solid #30363d !important; }
+  pre { background-color: #161b22 !important; border: 1px solid #30363d !important; }
+  
+  /* Botones principales con el Cian UTN (#008294) */
+  .btn { background-color: #008294 !important; border-color: #008294 !important; color: #ffffff !important; }
+  .btn:hover { background-color: #00a3b8 !important; }
+  
+  /* Divisores horizontales */
+  hr { border-top: 1px solid #30363d !important; background: none !important; }
