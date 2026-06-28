@@ -1,1 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title }} | Cátedras</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  </head>
+  <body>
+    <div class="container-master">
+      <header class="site-header">
+        <h1 class="site-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+        <p class="site-subtitle">{{ site.description }}</p>
+      </header>
 
+      <main class="main-content-area">
+        {{ content }}
+      </main>
+    </div>
+  </body>
+</html>
