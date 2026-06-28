@@ -1,95 +1,45 @@
----
----
-@import "{{ site.theme }}";
-
-// 🌑 Estética Premium Minimal (Global)
-html, body, .wrapper, .main-content {
-  background-color: #0b0e14 !important; // Gris grafito profundo
-  color: #b3b9c5 !important;           // Gris plata suave para lectura
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-}
-
-// 🏛️ Cabecera Sobria
-header, .header, .page-header {
-  background-color: #11151d !important; // Un tono sutilmente más claro que el fondo
-  border-bottom: 1px solid #1f242e !important;
-  background-image: none !important;
-  padding: 30px 20px !important;
-}
-
-// Títulos en Blanco Puro
-h1, h2, h3, h4, h5, h6, .page-title, .project-name {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.project-tagline {
-  color: #6c7689 !important; // Subtítulo apagado y elegante
-}
-
-// 🔗 Enlaces en Azul Eléctrico Tecnológico
-a {
-  color: #0070f3 !important;
-  text-decoration: none !important;
-  transition: color 0.2s ease;
-}
-a:hover {
-  color: #3291ff !important;
-  text-decoration: underline !important;
-}
-
-// 🎛️ Botones Estilo Panel de Control
-.btn, .button {
-  background-color: #1f242e !important;
-  border: 1px solid #343a46 !important;
-  color: #ffffff !important;
-  border-radius: 6px !important;
-  padding: 10px 20px !important;
-  text-decoration: none !important;
+// 🎛️ Sistema de Botones Modernos de Alta Visibilidad
+.btn-materia {
   display: inline-block !important;
-  transition: all 0.2s ease !important;
-}
-.btn:hover, .button:hover {
-  background-color: #0070f3 !important;
-  border-color: #0070f3 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 12px rgba(0, 112, 243, 0.3);
-}
-
-// 💻 Bloques de Código e Instrumental
-code {
-  background-color: #161b22 !important;
-  color: #f7768e !important; // Tono rojizo suave para variables
-  padding: 3px 6px !important;
-  border-radius: 4px !important;
-  border: 1px solid #21262d !important;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  padding: 12px 24px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  text-decoration: none !important;
+  background-color: #161b22 !important; // Fondo oscuro limpio
+  transition: all 0.2s ease-in-out !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
-pre {
-  background-color: #161b22 !important;
-  border: 1px solid #21262d !important;
-  padding: 16px !important;
-  border-radius: 8px !important;
-  overflow: auto !important;
+// Botón Física (Cian)
+.btn-fisica {
+  border: 1px solid #00b4d8 !important;
+  color: #00b4d8 !important;
+}
+.btn-fisica:hover {
+  background-color: #00b4d8 !important;
+  color: #0b0e14 !important; // Texto oscuro al pasar el mouse
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.4) !important;
 }
 
-pre code {
-  background-color: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  color: #e3e6ed !important;
+// Botón Bioelectrónica (Menta)
+.btn-bio {
+  border: 1px solid #10b981 !important;
+  color: #10b981 !important;
+}
+.btn-bio:hover {
+  background-color: #10b981 !important;
+  color: #0b0e14 !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4) !important;
 }
 
-// Líneas divisorias sutiles
-hr {
-  border-top: 1px solid #1f242e !important;
-  background: none !important;
-  margin: 30px 0 !important;
+// Botón Microsistemas (Naranja Técnico)
+.btn-micro {
+  border: 1px solid #ff922b !important;
+  color: #ff922b !important;
 }
-
-// Contenedor de bloques (fijar el ancho máximo para lectura cómoda)
-.wrapper {
-  max-width: 850px !important;
-  margin: 0 auto !important;
+.btn-micro:hover {
+  background-color: #ff922b !important;
+  color: #0b0e14 !important;
+  box-shadow: 0 0 15px rgba(255, 146, 43, 0.4) !important;
 }
