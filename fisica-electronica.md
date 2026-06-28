@@ -29,11 +29,13 @@ Bienvenido al espacio de la asignatura. Aquí analizaremos los fundamentos físi
 * [Notebook: Cálculo Simbólico de Valor Eficaz en Ondas Rectificadas](https://colab.research.google.com/)
 * [Notebook: Visualización de la Identidad de Ángulo Doble](https://colab.research.google.com/)
 
-<iframe src="https://nbviewer.org/github.com/porrale/porrale.github.io/valores_medio_eficaz.ipynb" 
-        width="100%" 
-        height="600px" 
-        style="border: 1px solid #1f242e; border-radius: 8px;">
-</iframe>
+## 💻 Laboratorio: Parámetros de Ondas Periódicas
+
+Análisis temporal y cálculo algebraico de valor medio y eficaz. Podés interactuar con el script y correr las simulaciones haciendo clic abajo:
+
+<a href="https://colab.research.google.com/github/porrale/porrale.github.io/blob/main/valores_medio_eficaz.ipynb" target="_blank" style="display: inline-block; margin-top: 10px;">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 ---
 [⬅️ Volver al Inicio](/)
