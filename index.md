@@ -1,23 +1,34 @@
 ---
 layout: default
-title: Portada Principal
+title: Inicio
+nav_order: 1
 ---
 
-# 🚀 Espacio de Cátedras y Laboratorios
+# 🚀 Bienvenido a mi Espacio Web
 
-Bienvenido. Este sitio centraliza el material didáctico, las simulaciones interactivas y las guías de laboratorio diseñadas para las asignaturas de ingeniería.
+Este sitio centraliza mi actividad docente y de laboratorio en ingeniería, junto con mis proyectos, notas de divulgación y pasiones personales.
 
 ---
 
-## 📚 Acceso a las Materias
+## 📚 Actividad Académica y Cátedras
 
-<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
-  <a href="./fisica-electronica/" style="background-color: #1b6ec2; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🌌 Física Electrónica</a>
-  <a href="./bioelectronica/" style="background-color: #2b8a3e; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🧬 Bioelectrónica</a>
-  <a href="./microsistemas/" style="background-color: #d9480f; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🤖 Microsistemas</a>
+Explorá los contenidos multimedia, simulaciones y guías de las asignaturas:
+
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; margin-bottom: 25px;">
+  <a href="./fisica-electronica/" style="background-color: #008294; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🌌 Física Electrónica</a>
+  <a href="./bioelectronica/" style="background-color: #005a9c; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🧬 Bioelectrónica</a>
+  <a href="./microsistemas/" style="background-color: #212529; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🤖 Microsistemas</a>
 </div>
 
 ---
 
-### 📢 Últimas Actualizaciones y Ensayos
-*Próximamente se habilitará el Blog de Laboratorios.*
+## ☕ Espacio Personal y Hobbies
+
+Fuera del laboratorio y las aulas, dedico mi tiempo a la música, el coleccionismo y el estudio de las ciencias naturales.
+
+* 📋 **[Conocé mi Bio y Trayectoria](./personal/#bio)**
+* 🎹 **[Estudios de Piano y Lenguaje Musical](./personal/#piano)**
+* 💎 **[Colección de Minerales y Geología](./personal/#minerales)**
+* ✉️ **[Filatelia e Historia Postal](./personal/#filatelia)**
+
+👉 **[Entrar a la Sección Personal](./personal/)**
