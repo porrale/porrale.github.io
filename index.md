@@ -1,13 +1,23 @@
 ---
 layout: default
-title: Inicio - Física Electrónica, Bioelectrónica y Microsistemas
+title: Portada Principal
 ---
 
-# Bienvenidos al Espacio de Cátedras y Laboratorios
+# 🚀 Espacio de Cátedras y Laboratorios
 
-Acá van a encontrar todo el material complementario para las materias de **Física Electrónica**, **Bioelectrónica** y **Microsistemas**.
+Bienvenido. Este sitio centraliza el material didáctico, las simulaciones interactivas y las guías de laboratorio diseñadas para las asignaturas de ingeniería.
 
-## 📚 Secciones Rápidas
-* [Física Electrónica](fisica-electronica.md)
-* [Bioelectrónica](bioelectronica.md)
-* [Blog de Laboratorios y Novedades](blog.md)
+---
+
+## 📚 Acceso a las Materias
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+  <a href="./fisica-electronica/" style="background-color: #1b6ec2; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🌌 Física Electrónica</a>
+  <a href="./bioelectronica/" style="background-color: #2b8a3e; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🧬 Bioelectrónica</a>
+  <a href="./microsistemas/" style="background-color: #d9480f; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">🤖 Microsistemas</a>
+</div>
+
+---
+
+### 📢 Últimas Actualizaciones y Ensayos
+*Próximamente se habilitará el Blog de Laboratorios.*
