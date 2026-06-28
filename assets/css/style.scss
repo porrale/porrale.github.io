@@ -1,0 +1,59 @@
+---
+---
+@import "{{ site.theme }}";
+
+// Forzar Modo Oscuro Completo
+body {
+  background-color: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+}
+
+// Cabecera institucional UTN adaptada a la noche
+header {
+  background-color: #0f2744 !important;
+  border-bottom: 1px solid #30363d !important;
+  background-image: none !important; // Quita gradientes viejos
+}
+
+.project-name {
+  color: #ffffff !important;
+}
+
+.project-tagline {
+  color: #58a6ff !important;
+}
+
+// Enlaces
+a {
+  color: #58a6ff !important;
+}
+
+// Botones con el Cian UTN
+.btn {
+  background-color: #008294 !important;
+  border-color: #008294 !important;
+  color: #ffffff !important;
+}
+.btn:hover {
+  background-color: #00a3b8 !important;
+}
+
+// Bloques de código tipo IDE oscuro
+code {
+  background-color: #161b22 !important;
+  color: #ff7b72 !important;
+  border: 1px solid #30363d !important;
+}
+
+pre {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+}
+
+hr {
+  border-top: 1px solid #30363d !important;
+}
