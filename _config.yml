@@ -1,10 +1,14 @@
 title: "Edgardo | Espacio Profesional y Personal"
 description: "Cátedras de Ingeniería y Espacio Personal"
-# Usamos Just the Docs porque permite personalizar colores fácilmente
-remote_theme: just-the-docs/just-the-docs
-# Configuración de la paleta de colores basada en el logo UTN
-color_scheme: utn_theme
-# Definición de variables de color (Jekyll las procesa automáticamente)
-branding_color: "#008294"      # Cian UTN para detalles dinámicos
-header_color: "#005a9c"        # Azul oscuro para el bloque de encabezado
-nav_color: "#f5f6f8"           # Fondo gris limpio para el menú lateral
+
+# Tema nativo ultra-limpio y altamente compatible
+theme: jekyll-theme-minimal
+
+# Forzamos la paleta de colores inyectando estilos CSS directamente
+# para asegurar que tome el azul y cian de la UTN Avellaneda
+inline_css: >
+  header { background-color: #005a9c !important; }
+  .project-name { color: #ffffff !important; }
+  .project-tagline { color: #008294 !important; }
+  a { color: #005a9c; }
+  .btn { background-color: #008294 !important; border-color: #008294 !important; }
