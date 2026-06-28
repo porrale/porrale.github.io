@@ -29,5 +29,11 @@ Bienvenido al espacio de la asignatura. Aquí analizaremos los fundamentos físi
 * [Notebook: Cálculo Simbólico de Valor Eficaz en Ondas Rectificadas](https://colab.research.google.com/)
 * [Notebook: Visualización de la Identidad de Ángulo Doble](https://colab.research.google.com/)
 
+<iframe src="https://nbviewer.org/github.com/porrale/porrale.github.io/blob/main/valores_medio_eficaz.ipynb" 
+        width="100%" 
+        height="600px" 
+        style="border: 1px solid #1f242e; border-radius: 8px;">
+</iframe>
+
 ---
 [⬅️ Volver al Inicio](/)
