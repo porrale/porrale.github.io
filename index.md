@@ -31,4 +31,4 @@ Fuera del laboratorio y las aulas, dedico mi tiempo a la música, el coleccionis
 * 💎 **[Colección de Minerales y Geología](./personal/#minerales)**
 * ✉️ **[Filatelia e Historia Postal](./personal/#filatelia)**
 
-👉 **[Entrar a la Sección Personal](./personal/)**
+
