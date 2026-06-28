@@ -1,6 +1,6 @@
 ---
-layout: page
-title: "Física Electrónica"
+layout: default
+title: Física Electrónica
 permalink: /fisica-electronica/
 ---
 
