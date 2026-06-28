@@ -1,71 +1,66 @@
 ---
 ---
-@import "{{ site.theme }}";
-
-// 🌑 REESTABLECER MODO OSCURO GLOBAL (Index y subpáginas)
-html, body, .wrapper, .main-content {
-  background-color: #0b0e14 !important; // Gris grafito profundo
-  color: #b3b9c5 !important;           // Gris plata suave para lectura
+// 🌑 Estilo Base Premium Minimal
+* { box-sizing: border-box; }
+body {
+  background-color: #0b0e14 !important;
+  color: #b3b9c5 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
 }
 
-// Títulos en Blanco Puro
-h1, h2, h3, h4, h5, h6, .page-title, .project-name {
+// Contenedor principal centrado
+.container-master {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+// Encabezado
+.site-header {
+  background-color: #11151d;
+  border: 1px solid #1f242e;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+.site-title a {
   color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.site-subtitle {
+  color: #6c7689;
+  margin: 5px 0 0 0;
 }
 
-.project-tagline {
-  color: #6c7689 !important;
-}
+// Títulos, Enlaces y Código
+h1, h2, h3, h4 { color: #ffffff; font-weight: 600; margin-top: 30px; }
+a { color: #0070f3; text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: none; border-top: 1px solid #1f242e; margin: 35px 0; }
 
-header, .header, .page-header {
-  background-color: #11151d !important;
-  border-bottom: 1px solid #1f242e !important;
-  background-image: none !important;
-}
+code, pre { background-color: #161b22; border: 1px solid #21262d; border-radius: 6px; }
+code { padding: 3px 6px; color: #f7768e; font-family: monospace; }
+pre { padding: 15px; overflow-auto: auto; }
+pre code { color: #e3e6ed; padding: 0; border: none; }
 
-a {
-  color: #0070f3 !important;
-}
-
-// 🎛️ NUEVO ESTILO: BOTONES MÍNIMAL DE CÁPSULA (Estilo Notion/Spotify)
+// 🎛️ Botones de Cápsula (Notion style)
 .btn-materia {
   display: inline-block !important;
-  padding: 10px 20px !important;
-  border-radius: 20px !important; /* Forma de cápsula redondeada */
+  padding: 10px 24px !important;
+  border-radius: 20px !important;
   font-weight: 500 !important;
   font-size: 0.9rem !important;
   text-decoration: none !important;
-  color: #ffffff !important;       /* Texto siempre blanco puro */
-  background-color: #1a1f29 !important; /* Fondo gris sutil integrado */
+  color: #ffffff !important;
+  background-color: #1a1f29 !important;
   border: 1px solid #2d3545 !important;
-  transition: all 0.2s ease-in-out !important;
+  transition: all 0.2s ease;
 }
-
-// Comportamiento al pasar el mouse por encima (Hover)
-.btn-fisica:hover {
-  border-color: #00b4d8 !important;
-  background-color: rgba(0, 180, 216, 0.1) !important;
-}
-
-.btn-bio:hover {
-  border-color: #10b981 !important;
-  background-color: rgba(16, 185, 129, 0.1) !important;
-}
-
-.btn-micro:hover {
-  border-color: #ff922b !important;
-  background-color: rgba(255, 146, 43, 0.1) !important;
-}
-
-// Bloques de código
-code, pre {
-  background-color: #161b22 !important;
-  border: 1px solid #21262d !important;
-}
-hr {
-  border-top: 1px solid #1f242e !important;
-}
-.wrapper {
-  max-width: 850px !important;
-  margin: 0 auto !important;
-}
+.btn-fisica:hover { border-color: #00b4d8 !important; background-color: rgba(0, 180, 216, 0.1) !important; }
+.btn-bio:hover { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.1) !important; }
+.btn-micro:hover { border-color: #ff922b !important; background-color: rgba(255, 146, 43, 0.1) !important; }
