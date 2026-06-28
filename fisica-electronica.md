@@ -37,5 +37,14 @@ Análisis temporal y cálculo algebraico de valor medio y eficaz. Podés interac
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
+## 📊 Visualización del Cuaderno de Cátedra
+
+Acá podés repasar el desarrollo matemático y el código del ensayo directamente desde la web:
+
+<iframe src="https://nbviewer.org/github/porrale/porrale.github.io/blob/main/valores_medio_eficaz.ipynb" 
+        width="100%" 
+        height="650px" 
+        style="border: 1px solid #1f242e; border-radius: 8px; margin-top: 15px; background-color: #ffffff;">
+</iframe>
 ---
 [⬅️ Volver al Inicio](/)
