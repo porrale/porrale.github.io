@@ -2,58 +2,94 @@
 ---
 @import "{{ site.theme }}";
 
-// Forzar Modo Oscuro Completo
-body {
-  background-color: #0d1117 !important;
-  color: #c9d1d9 !important;
+// 🌑 Estética Premium Minimal (Global)
+html, body, .wrapper, .main-content {
+  background-color: #0b0e14 !important; // Gris grafito profundo
+  color: #b3b9c5 !important;           // Gris plata suave para lectura
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+// 🏛️ Cabecera Sobria
+header, .header, .page-header {
+  background-color: #11151d !important; // Un tono sutilmente más claro que el fondo
+  border-bottom: 1px solid #1f242e !important;
+  background-image: none !important;
+  padding: 30px 20px !important;
+}
+
+// Títulos en Blanco Puro
+h1, h2, h3, h4, h5, h6, .page-title, .project-name {
   color: #ffffff !important;
-}
-
-// Cabecera institucional UTN adaptada a la noche
-header {
-  background-color: #0f2744 !important;
-  border-bottom: 1px solid #30363d !important;
-  background-image: none !important; // Quita gradientes viejos
-}
-
-.project-name {
-  color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 .project-tagline {
-  color: #58a6ff !important;
+  color: #6c7689 !important; // Subtítulo apagado y elegante
 }
 
-// Enlaces
+// 🔗 Enlaces en Azul Eléctrico Tecnológico
 a {
-  color: #58a6ff !important;
+  color: #0070f3 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: #3291ff !important;
+  text-decoration: underline !important;
 }
 
-// Botones con el Cian UTN
-.btn {
-  background-color: #008294 !important;
-  border-color: #008294 !important;
+// 🎛️ Botones Estilo Panel de Control
+.btn, .button {
+  background-color: #1f242e !important;
+  border: 1px solid #343a46 !important;
   color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 10px 20px !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  transition: all 0.2s ease !important;
 }
-.btn:hover {
-  background-color: #00a3b8 !important;
+.btn:hover, .button:hover {
+  background-color: #0070f3 !important;
+  border-color: #0070f3 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(0, 112, 243, 0.3);
 }
 
-// Bloques de código tipo IDE oscuro
+// 💻 Bloques de Código e Instrumental
 code {
   background-color: #161b22 !important;
-  color: #ff7b72 !important;
-  border: 1px solid #30363d !important;
+  color: #f7768e !important; // Tono rojizo suave para variables
+  padding: 3px 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid #21262d !important;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
 }
 
 pre {
   background-color: #161b22 !important;
-  border: 1px solid #30363d !important;
+  border: 1px solid #21262d !important;
+  padding: 16px !important;
+  border-radius: 8px !important;
+  overflow: auto !important;
 }
 
+pre code {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: #e3e6ed !important;
+}
+
+// Líneas divisorias sutiles
 hr {
-  border-top: 1px solid #30363d !important;
+  border-top: 1px solid #1f242e !important;
+  background: none !important;
+  margin: 30px 0 !important;
+}
+
+// Contenedor de bloques (fijar el ancho máximo para lectura cómoda)
+.wrapper {
+  max-width: 850px !important;
+  margin: 0 auto !important;
 }
