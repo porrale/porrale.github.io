@@ -12,12 +12,13 @@ Este sitio centraliza mi actividad docente y de laboratorio en ingeniería, junt
 
 ## 📚 Actividad Académica y Cátedras
 
+
 Explorá los contenidos multimedia, simulaciones y guías de las asignaturas:
 
-<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 15px; margin-bottom: 25px;">
-  <a href="./fisica-electronica/" style="background-color: #008294; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🌌 Física Electrónica</a>
-  <a href="./bioelectronica/" style="background-color: #005a9c; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🧬 Bioelectrónica</a>
-  <a href="./microsistemas/" style="background-color: #212529; color: white; padding: 12px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">🤖 Microsistemas</a>
+<div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px; margin-bottom: 25px;">
+  <a href="./fisica-electronica/" class="btn-materia btn-fisica">🌌 Física Electrónica</a>
+  <a href="./bioelectronica/" class="btn-materia btn-bio">🧬 Bioelectrónica</a>
+  <a href="./microsistemas/" class="btn-materia btn-micro">🤖 Microsistemas</a>
 </div>
 
 ---
