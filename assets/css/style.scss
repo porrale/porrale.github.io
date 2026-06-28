@@ -1,45 +1,71 @@
-// 🎛️ Sistema de Botones Modernos de Alta Visibilidad
+---
+---
+@import "{{ site.theme }}";
+
+// 🌑 REESTABLECER MODO OSCURO GLOBAL (Index y subpáginas)
+html, body, .wrapper, .main-content {
+  background-color: #0b0e14 !important; // Gris grafito profundo
+  color: #b3b9c5 !important;           // Gris plata suave para lectura
+}
+
+// Títulos en Blanco Puro
+h1, h2, h3, h4, h5, h6, .page-title, .project-name {
+  color: #ffffff !important;
+}
+
+.project-tagline {
+  color: #6c7689 !important;
+}
+
+header, .header, .page-header {
+  background-color: #11151d !important;
+  border-bottom: 1px solid #1f242e !important;
+  background-image: none !important;
+}
+
+a {
+  color: #0070f3 !important;
+}
+
+// 🎛️ NUEVO ESTILO: BOTONES MÍNIMAL DE CÁPSULA (Estilo Notion/Spotify)
 .btn-materia {
   display: inline-block !important;
-  padding: 12px 24px !important;
-  border-radius: 6px !important;
-  font-weight: 600 !important;
-  font-size: 0.95rem !important;
+  padding: 10px 20px !important;
+  border-radius: 20px !important; /* Forma de cápsula redondeada */
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
   text-decoration: none !important;
-  background-color: #161b22 !important; // Fondo oscuro limpio
+  color: #ffffff !important;       /* Texto siempre blanco puro */
+  background-color: #1a1f29 !important; /* Fondo gris sutil integrado */
+  border: 1px solid #2d3545 !important;
   transition: all 0.2s ease-in-out !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
-// Botón Física (Cian)
-.btn-fisica {
-  border: 1px solid #00b4d8 !important;
-  color: #00b4d8 !important;
-}
+// Comportamiento al pasar el mouse por encima (Hover)
 .btn-fisica:hover {
-  background-color: #00b4d8 !important;
-  color: #0b0e14 !important; // Texto oscuro al pasar el mouse
-  box-shadow: 0 0 15px rgba(0, 180, 216, 0.4) !important;
+  border-color: #00b4d8 !important;
+  background-color: rgba(0, 180, 216, 0.1) !important;
 }
 
-// Botón Bioelectrónica (Menta)
-.btn-bio {
-  border: 1px solid #10b981 !important;
-  color: #10b981 !important;
-}
 .btn-bio:hover {
-  background-color: #10b981 !important;
-  color: #0b0e14 !important;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4) !important;
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.1) !important;
 }
 
-// Botón Microsistemas (Naranja Técnico)
-.btn-micro {
-  border: 1px solid #ff922b !important;
-  color: #ff922b !important;
-}
 .btn-micro:hover {
-  background-color: #ff922b !important;
-  color: #0b0e14 !important;
-  box-shadow: 0 0 15px rgba(255, 146, 43, 0.4) !important;
+  border-color: #ff922b !important;
+  background-color: rgba(255, 146, 43, 0.1) !important;
+}
+
+// Bloques de código
+code, pre {
+  background-color: #161b22 !important;
+  border: 1px solid #21262d !important;
+}
+hr {
+  border-top: 1px solid #1f242e !important;
+}
+.wrapper {
+  max-width: 850px !important;
+  margin: 0 auto !important;
 }
