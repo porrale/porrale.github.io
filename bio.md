@@ -18,7 +18,7 @@ Espacio dedicado al estudio de la interfaz entre los sistemas electrónicos y lo
 
 ### 2. Adquisición de Señales Bioeléctricas
 * Sensores y electrodos para ECG, EEG y EMG.
-* Técnicas de reducción de ruido y acoplamiento magnético/eléctrico.
+
 
 ---
 

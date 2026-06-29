@@ -16,7 +16,7 @@ Bienvenido al espacio de la asignatura. Aquí analizaremos los fundamentos físi
 * **Valor Instantáneo:** Comportamiento y modelado temporal $y(t)$.
 * **Valor Medio:** Cálculo algebraico en señales simétricas y rectificadas.
 * **Valor Eficaz (RMS):** Equivalencia de potencia térmica e integración analítica.
-* **Factor de Forma:** Relación de agudeza geométrica de la señal.
+
 
 ---
 
