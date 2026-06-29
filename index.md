@@ -29,5 +29,5 @@ Fuera del laboratorio y las aulas, dedico mi tiempo a la música, el coleccionis
 
 * 📋 **[Conocé mi Bio y Trayectoria](./personal/#bio)**
 * 🎹 **[Estudios de Piano y Lenguaje Musical](./personal/#piano)**
-* 💎 **[Colección de Minerales y Geología](./personal/minerales/index.html)**
+* 💎 **[Colección de Minerales y Geología](./minerales/index.html)**
 * ✉️ **[Filatelia e Historia Postal](./personal/#filatelia)**
