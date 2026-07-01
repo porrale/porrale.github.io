@@ -138,7 +138,7 @@
         .numero-id {
             font-size: 0.85rem;
             font-weight: bold;
-            color: var(--texto-mutado);
+            color: var(--texto-mutated);
             margin-bottom: 5px;
         }
 
@@ -178,7 +178,7 @@
             display: inline-block;
         }
 
-        /* --- VENTANA MODAL ENRIQUECIDA (FICHA DETALLADA) --- */
+        /* --- VENTANA MODAL MODIFICADA (MÉTODO MARCO INFERIOR) --- */
         .modal {
             position: fixed;
             top: 0;
@@ -204,9 +204,9 @@
         .modal-contenido {
             background-color: white;
             border-radius: 16px;
-            max-width: 700px; /* Un poco más ancho para dar espacio a la foto */
+            max-width: 700px;
             width: 100%;
-            overflow: hidden; /* Para que la imagen respete las esquinas redondeadas */
+            overflow: hidden;
             position: relative;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             transform: scale(0.9);
@@ -219,31 +219,17 @@
             transform: scale(1);
         }
 
-        /* Contenedor de la Imagen del Mineral */
-        .modal-imagen-container {
-            width: 100%;
-            height: 280px;
-            background-color: #2c3e50;
-            position: relative;
-        }
-
-        .modal-imagen-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ajusta la foto perfectamente sin deformarla */
-        }
-
         .cerrar-modal {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2.5rem;
-            background: rgba(0, 0, 0, 0.5);
+            top: 25px;
+            right: 25px;
+            font-size: 2.2rem;
+            background: rgba(0, 0, 0, 0.05);
             border: none;
-            color: white;
+            color: var(--texto-oscuro);
             cursor: pointer;
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -255,11 +241,12 @@
 
         .cerrar-modal:hover {
             background: rgba(231, 76, 60, 0.9);
+            color: white;
         }
 
-        /* Cuerpo de la información */
+        /* Cuerpo de la información (Ahora en la parte superior) */
         .modal-detalles {
-            padding: 30px;
+            padding: 30px 30px 15px 30px;
         }
 
         .modal-header {
@@ -271,6 +258,7 @@
         .modal-header h2 {
             color: var(--texto-oscuro);
             font-size: 2rem;
+            padding-right: 40px; /* Evita que el texto choque con la X */
         }
 
         .modal-descripcion {
@@ -295,21 +283,38 @@
             display: inline-block;
         }
 
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 30px;
-            background-color: #1a2a3a;
-            color: #bdc3c7;
-            margin-top: 60px;
-            font-size: 0.9rem;
+       
+
+
+        /* Contenedor de la Imagen del Mineral (Cuadrado y centrado) */
+        .modal-imagen-container {
+            width: 280px; /* Ancho fijo igual al alto para asegurar el cuadrado perfectos */
+            height: 280px;
+            background-color: #f4f7f6;
+            position: relative;
+            margin: 0 auto 30px auto; /* Centrado horizontal y margen inferior */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .modal-imagen-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Ajustes pantallas pequeñas */
         @media (max-width: 600px) {
-            .modal-imagen-container { height: 180px; }
-            .modal-detalles { padding: 20px; }
+            .modal-imagen-container { 
+                height: 180px; 
+                width: calc(100% - 40px);
+                margin-bottom: 20px;
+            }
+            .modal-detalles { padding: 20px 20px 10px 20px; }
             .modal-header h2 { font-size: 1.6rem; }
+            .cerrar-modal { top: 15px; right: 15px; }
         }
     </style>
 </head>
@@ -323,35 +328,30 @@
     <main class="container">
         <h2 class="seccion-titulo">Inventario General</h2>
         <div class="grid-minerales" id="grid-minerales">
-            <!-- Renderizado dinámico -->
-        </div>
+            </div>
     </main>
 
-    <!-- VENTANA MODAL (FICHA TÉCNICA AVANZADA) -->
     <div class="modal" id="modal-mineral">
         <div class="modal-contenido">
             <button class="cerrar-modal" id="btn-cerrar">&times;</button>
             
-            <!-- Zona de Foto -->
-            <div class="modal-imagen-container">
-                <img id="modal-img" src="" alt="Fotografía del mineral">
-            </div>
-
-            <!-- Zona de Datos -->
             <div class="modal-detalles">
                 <div class="modal-header">
                     <div class="numero-id" id="modal-id">N°00</div>
                     <h2 id="modal-nombre">Nombre del Mineral</h2>
                 </div>
                 
-                <!-- Descripción Breve -->
                 <div class="modal-descripcion" id="modal-desc">
                     Aquí se mostrará la descripción detallada.
                 </div>
 
                 <div class="modal-info-item"><strong>Categoría:</strong> Minerales de la Tierra (Gran Tamaño)</div>
                 <div class="modal-info-item"><strong>Estado:</strong> <span id="modal-estado"></span></div>
-                <div class="modal-info-item" id="modal-extra" style="font-style: italic; color: var(--texto-mutado);"></div>
+                <div class="modal-info-item" id="modal-extra" style="font-style: italic; color: var(--texto-mutado); margin-bottom: 15px;"></div>
+            </div>
+
+            <div class="modal-imagen-container">
+                <img id="modal-img" src="" alt="Fotografía del mineral">
             </div>
         </div>
     </div>
@@ -361,8 +361,6 @@
     </footer>
 
     <script>
-        // Base de datos actualizada con espacio para imágenes y descripciones.
-        // He rellenado los primeros a modo de ejemplo funcional completo.
         const minerales = [
             { 
                 id: "N°1", 
@@ -375,14 +373,14 @@
                 id: "N°2", 
                 nombre: "Cuarzo rosa", 
                 poseido: true,
-                imagen: "https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=700&q=80",
+                imagen: "https://res.cloudinary.com/drruqi1kg/image/upload/v1782945037/cuarzo_rosa_dpfnim.png",
                 descripcion: "Variedad de cuarzo de color rosado que suele encontrarse en forma masiva. Su tonalidad se debe a trazas microscópicas de titanio, hierro o manganeso. Muy apreciado en gemología y decoración."
             },
             { 
                 id: "N°3", 
-                nombre: "Ojo de tigre + Caja coleccionadora", 
+                nombre: "Ojo de tigre", 
                 poseido: true,
-                imagen: "https://res.cloudinary.com/drruqi1kg/image/upload/v1779133327/minerales/03_ojo_de_tigre_gx9hzq.png",
+                imagen: "https://res.cloudinary.com/drruqi1kg/image/upload/v1782945563/ojo_de_tigre_s1spjq.png",
                 descripcion: "Mineral de estructura fibrosa con un fuerte efecto de chatoyancia (reflejo de ojo de gato). Exhibe bandas alternas de color amarillo dorado y marrón debido al reemplazo de crocidolita por sílice."
             },
             { 
@@ -396,7 +394,7 @@
                 id: "N°5", 
                 nombre: "Pirita", 
                 poseido: true,
-                imagen: "https://images.unsplash.com/photo-1635773054018-22c60e0a5ed9?auto=format&fit=crop&w=700&q=80",
+                imagen: "https://res.cloudinary.com/drruqi1kg/image/upload/v1782945661/pirita_goxwaq.png",
                 descripcion: "También conocida como 'el oro de los tontos' por su brillo metálico amarillento. Es un sulfuro de hierro pesado que cristaliza con frecuencia en cubos perfectos muy llamativos."
             },
             { 
@@ -435,12 +433,16 @@
                 imagen: "https://upload.wikimedia.org/wikipedia/commons/c/ca/Celestine_Madagascar.jpg",
                 descripcion: "Sulfato de estroncio famoso por sus geodas repletas de cristales tabulares estéticos de un color azul cielo pálido característico. Los mejores ejemplares mundiales provienen de Madagascar."
             },
-            // --- Para los siguientes minerales, añadimos valores por defecto autogenerados si no especificas uno personalizado ---
             { id: "N°11", nombre: "Rodonita (pulida)", poseido: true },
             { id: "N°12", nombre: "Obsidiana Negra", poseido: true },
             { id: "N°13", nombre: "Calcita naranja", poseido: true },
             { id: "N°14", nombre: "Hornblenda", poseido: false },
-            { id: "N°15", nombre: "Jaspe Rojo", poseido: false },
+            { id: "N°15", 
+                nombre: "Jaspe Rojo Pulido", 
+                poseido: true,
+                imagen: "https://res.cloudinary.com/drruqi1kg/image/upload/v1782945755/jaspe_rojo_ef8815.png",
+                descripcion: "Variedad microcristalina de cuarzo (calcedonia) de estructura opaca y textura suave tras el pulido. Su intenso color rojo terracota se debe a la alta presencia de inclusiones de óxido de hierro (hematites). Presenta una fractura concoidea y es altamente valorado tanto en colecciones geológicas como en trabajos de joyería ornamental por su brillo vítreo y vetas naturales únicas."
+            },
             { id: "N°16", nombre: "Yeso (Rosa del desierto)", poseido: false },
             { id: "N°17", nombre: "Ópalo", poseido: false, extra: "Ref: 78" },
             { id: "N°18", nombre: "Azurita + Caja coleccionadora", poseido: true },
@@ -479,7 +481,7 @@
             { id: "N°51", nombre: "Turquenita", poseido: false },
             { id: "N°52", nombre: "Siderita", poseido: false },
             { id: "N°53", nombre: "Calcedonia Flor", poseido: false },
-            { id: "N°54", nombre: "Apatito", poseido: false },
+            { id: "N°54", font_style: "", nombre: "Apatito", poseido: false },
             { id: "N°55", nombre: "Cianita", poseido: false },
             { id: "N°56", nombre: "Hematites", poseido: false },
             { id: "N°57", nombre: "Crisocola", poseido: false, extra: "Ref: 67" },
@@ -511,7 +513,6 @@
             { id: "N°53-B", nombre: "Tectita", poseido: true, extra: "Ref: 53" }
         ];
 
-        // Imagen de respaldo por si un mineral no tiene asignada una URL propia
         const imgDefecto = "https://images.unsplash.com/photo-1531846802906-410985f7ff4d?auto=format&fit=crop&w=700&q=80";
         const descDefecto = "Ejemplar geológico de gran tamaño perteneciente a la colección 'M de la Tierra'. Pendiente de ampliación de ficha criptográfica e historia de yacimiento.";
 
@@ -555,11 +556,9 @@
             modalId.textContent = mineral.id;
             modalNombre.textContent = mineral.nombre;
             
-            // Cargar imagen específica o la de por defecto
             modalImg.src = mineral.imagen ? mineral.imagen : imgDefecto;
             modalImg.alt = `Fotografía de ${mineral.nombre}`;
 
-            // Cargar descripción específica o la de por defecto
             modalDesc.textContent = mineral.descripcion ? mineral.descripcion : descDefecto;
             
             if(mineral.poseido) {
