@@ -10,6 +10,7 @@
             --card-bg: #1e1e24;
             --accent-purple: #6200ee;
             --accent-blue: #63b3ed;
+            --accent-teal: #319795;
             --text-main: #e2e8f0;
             --text-muted: #a0aec0;
         }
@@ -28,7 +29,7 @@
 
         .card {
             background-color: var(--card-bg);
-            max-width: 450px;
+            max-width: 480px;
             width: 90%;
             padding: 40px 30px;
             border-radius: 16px;
@@ -62,26 +63,44 @@
             font-size: 1rem;
             line-height: 1.6;
             color: var(--text-muted);
-            margin-bottom: 35px;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .btn-link {
-            display: inline-block;
-            background-color: var(--accent-purple);
+            display: block;
             color: #ffffff;
             text-decoration: none;
-            padding: 14px 28px;
+            padding: 14px 20px;
             font-weight: bold;
             font-size: 0.95rem;
             border-radius: 8px;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(98, 0, 238, 0.3);
         }
 
-        .btn-link:hover {
+        .btn-purple {
+            background-color: var(--accent-purple);
+            box-shadow: 0 4px 12px rgba(98, 0, 238, 0.3);
+        }
+        .btn-purple:hover {
             background-color: #7722ff;
             transform: translateY(-2px);
             box-shadow: 0 6px 18px rgba(98, 0, 238, 0.4);
+        }
+
+        .btn-teal {
+            background-color: var(--accent-teal);
+            box-shadow: 0 4px 12px rgba(49, 151, 149, 0.3);
+        }
+        .btn-teal:hover {
+            background-color: #2c7a7b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(49, 151, 149, 0.4);
         }
 
         .btn-link:active {
@@ -103,12 +122,13 @@
         <div class="institution">EMPA • Escuela de Música Popular de Avellaneda</div>
         
         <p class="description">
-            Arrancando con este proyecto web, te damos la bienvenida a EMPA, un espacio dedicado a la enseñanza y práctica de la música popular. Aquí encontrarás recursos para aprender teoría musical, mejorar tu técnica instrumental y desarrollar tu oído musical. Nuestro objetivo es brindarte herramientas para que puedas crecer como músico y disfrutar del proceso de aprendizaje.   
             Espacio personal dedicado al aprendizaje del lenguaje musical, la práctica instrumental y el desarrollo del entrenamiento auditivo en la música popular.
         </p>
 
-        <!-- NOTA: Reemplazá 'juego.html' por la ruta real donde guardaste la web del juego -->
-        <a href="acordes.html" class="btn-link">🕹️ JUGAR: Entrenador de Acordes</a>
+        <div class="button-group">
+            <a href="./acordes.html" class="btn-link btn-purple">🕹️ Entrenador de Acordes (Tríadas)</a>
+            <a href="./simon_zelada.html" class="btn-link btn-teal">🧠 Zelada Simón Melódico (Pentacordio)</a>
+        </div>
     </div>
 
 </body>
