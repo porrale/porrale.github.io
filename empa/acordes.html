@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Quest: Entrenamiento Avanzado de Acordes</title>
+    
+    <!-- Librería de Gráficos e Interfaz -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <!-- Librería de Audio Profesional -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f13;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    p5.disableFriendlyErrors = true; 
+
+    // --- MOTOR DE AUDIO (Tone.js Sampler Online) ---
+    let piano; 
+    const notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"];
+    const noteToSemitones = { "C4":0, "D4":2, "E4":4, "F4":5, "G4":7, "A4":9, "B4":11 };
+    const semitonesToNote = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+    // --- ESTADO DEL JUEGO ---
+    let gameState = "LOADING"; 
+    let currentChordType = ""; 
+    let lastChordNotes = []; // Guardamos las notas actuales para poder repetirlas
+    let feedbackText = "";
+    let feedbackColor;
+    let score = 0;
+    let highscore = 0;
+    let isChordPlaying = false;
+    let chordTimer = 0;
+
+    // --- INTERFAZ ---
+    let btnPlay, btnMayor, btnMenor, btnDisminuido;
+
+    function setup() {
+        createCanvas(500, 650); // Un poco más alto para acomodar el tercer botón
+        textAlign(CENTER, CENTER);
+
+        // Inicializar Sampler con el archivo Gb4 corregido
+        piano = new Tone.Sampler({
+            urls: {
+                "C4": "C4.mp3",
+                "E4": "E4.mp3",
+                "F#4": "Gb4.mp3",  
+                "A4": "A4.mp3"
+            },
+            baseUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/acoustic_grand_piano-mp3/", 
+            onload: () => {
+                gameState = "START"; 
+            }
+        }).toDestination();
+        
+        piano.volume.value = -2;
+
+        // Botón de Acción Principal (Generar / Repetir)
+        btnPlay = createButton('🔊 NUEVO ACORDE');
+        btnPlay.position(width / 2 - 100, height / 2 - 70);
+        btnPlay.size(200, 50);
+        styleButton(btnPlay, '#6200ee');
+        btnPlay.mousePressed(handlePlayButton);
+
+        // Botones de Opciones
+        btnMayor = createButton('MAYOR (Maj)');
+        btnMayor.position(width / 2 - 140, height / 2 + 80);
+        btnMayor.size(130, 45);
+        styleButton(btnMayor, '#2d3748');
+        btnMayor.mousePressed(() => checkAnswer('Mayor'));
+
+        btnMenor = createButton('MENOR (min)');
+        btnMenor.position(width / 2 + 10, height / 2 + 80);
+        btnMenor.size(130, 45);
+        styleButton(btnMenor, '#2d3748');
+        btnMenor.mousePressed(() => checkAnswer('Menor'));
+
+        btnDisminuido = createButton('DISMINUIDO (dim)');
+        btnDisminuido.position(width / 2 - 140, height / 2 + 140);
+        btnDisminuido.size(280, 45); // Botón centralizado abajo más ancho
+        styleButton(btnDisminuido, '#2d3748');
+        btnDisminuido.mousePressed(() => checkAnswer('Disminuido'));
+        
+        feedbackColor = color(255);
+    }
+
+    function draw() {
+        background(18, 18, 24);
+        
+        if (isChordPlaying) {
+            drawAudioWaves();
+            chordTimer -= deltaTime;
+            if (chordTimer <= 0) isChordPlaying = false;
+        }
+
+        // Títulos
+        fill('#e2e8f0');
+        textSize(28);
+        textStyle(BOLD);
+        text("AUDIO QUEST", width / 2, 50);
+        
+        textSize(14);
+        textStyle(NORMAL);
+        fill('#a0aec0');
+        text("Tríadas: Mayores, Menores y Disminuidas", width / 2, 85);
+
+        drawScoreboard();
+
+        // Control de textos en pantalla
+        if (gameState === "LOADING") {
+            fill('#ecc94b');
+            textSize(16);
+            text("Conectando con el piano online... 🎹", width / 2, height / 2 - 130);
+        } else if (gameState === "START") {
+            fill('#cbd5e0');
+            textSize(16);
+            text("Presioná el botón para empezar...", width / 2, height / 2 - 130);
+        } else if (gameState === "PLAYING") {
+            fill('#63b3ed');
+            textSize(16);
+            text("¿Qué tipo de acorde está sonando?", width / 2, height / 2 + 30);
+        } else if (gameState === "ANSWERED") {
+            fill(feedbackColor);
+            textSize(20);
+            textStyle(BOLD);
+            text(feedbackText, width / 2, height / 2 + 30);
+        }
+        
+        fill('#4a5568');
+        textSize(11);
+        textStyle(NORMAL);
+        text("Modo bucle de escucha activa • Tone.js", width / 2, height - 25);
+    }
+
+    // --- CONTROLADOR DEL BOTÓN DE AUDIO ---
+    function handlePlayButton() {
+        if (gameState === "LOADING") return;
+        Tone.start();
+
+        if (gameState === "PLAYING") {
+            // REPETIR: Si ya hay un acorde en juego, vuelve a tocar las mismas notas guardadas
+            piano.triggerAttackRelease(lastChordNotes, "4.0");
+            isChordPlaying = true;
+            chordTimer = 4000;
+        } else {
+            // GENERAR NUEVO: Si empezamos o ya respondimos, calcula un acorde nuevo
+            generateChord();
+        }
+    }
+
+    // --- LOGICA DE INTERVALOS ---
+    function generateChord() {
+        let rootNote = random(notes); 
+        
+        // Elige entre 3 opciones de forma equitativa (Mayor, Menor, Disminuido)
+        let r = random();
+        if (r < 0.33) {
+            currentChordType = 'Mayor';
+        } else if (r < 0.66) {
+            currentChordType = 'Menor';
+        } else {
+            currentChordType = 'Disminuido';
+        }
+        
+        let rootSemitone = noteToSemitones[rootNote];
+        
+        // Definición de intervalos en semitonos:
+        // Mayor: 3ra Mayor (4) y 5ta Justa (7)
+        // Menor: 3ra Menor (3) y 5ta Justa (7)
+        // Disminuido: 3ra Menor (3) y 5ta Disminuida (6)
+        let thirdInterval = (currentChordType === 'Mayor') ? 4 : 3;
+        let fifthInterval = (currentChordType === 'Disminuido') ? 6 : 7;
+
+        let thirdSemitone = rootSemitone + thirdInterval;
+        let fifthSemitone = rootSemitone + fifthInterval;
+
+        let thirdNote = semitonesToNote[thirdSemitone % 12] + "4";
+        let fifthNote = semitonesToNote[fifthSemitone % 12] + (fifthSemitone >= 12 ? "5" : "4");
+
+        // Almacenamos el acorde en la variable global para poder repetirlo después
+        lastChordNotes = [rootNote, thirdNote, fifthNote];
+
+        // Tocar
+        piano.triggerAttackRelease(lastChordNotes, "4.0"); 
+
+        btnPlay.html('🔁 REPETIR ACORDE'); // Cambia el texto del botón
+        styleButton(btnPlay, '#319795'); // Lo tiñe de un color verde azulado de escucha
+
+        isChordPlaying = true;
+        chordTimer = 4000; 
+        gameState = "PLAYING";
+    }
+
+    // --- VERIFICACIÓN ---
+    function checkAnswer(playerGuess) {
+        if (gameState !== "PLAYING") return;
+
+        if (playerGuess === currentChordType) {
+            feedbackText = "¡CORRECTO! 🎹🎉";
+            feedbackColor = color('#48bb78');
+            score++;
+            if (score > highscore) highscore = score;
+        } else {
+            feedbackText = `INCORRECTO 😢 (Era ${currentChordType})`;
+            feedbackColor = color('#f56565');
+            score = 0;
+        }
+        
+        // Restablece el botón principal para la próxima ronda
+        btnPlay.html('🔊 SIGUIENTE ACORDE');
+        styleButton(btnPlay, '#6200ee');
+
+        gameState = "ANSWERED";
+    }
+
+    function drawScoreboard() {
+        stroke('#2d3748');
+        strokeWeight(2);
+        fill(26, 26, 36);
+        rect(50, 115, 400, 70, 8);
+        
+        noStroke();
+        fill('#a0aec0');
+        textSize(12);
+        text("RACHA ACTUAL", 150, 137);
+        text("MÁXIMO PUNTAJE", 350, 137);
+        
+        fill('#fff');
+        textSize(24);
+        textStyle(BOLD);
+        text(score, 150, 163);
+        text(highscore, 350, 163);
+        textStyle(NORMAL);
+    }
+
+    function drawAudioWaves() {
+        noFill();
+        strokeWeight(3);
+        let fadePulse = (chordTimer / 4000) * 18;
+        let pulse = sin(frameCount * 0.15) * fadePulse;
+        
+        if (currentChordType === 'Mayor') {
+            stroke(66, 153, 225, 150); 
+        } else if (currentChordType === 'Menor') {
+            stroke(236, 64, 122, 150); 
+        } else {
+            stroke(236, 201, 75, 150); // Amarillo neón exclusivo para disminuidos
+        }
+        
+        ellipse(width / 2, height / 2 - 40, 120 + pulse, 120 + pulse);
+        ellipse(width / 2, height / 2 - 40, 160 - pulse, 160 - pulse);
+    }
+
+    function styleButton(btn, bgColor) {
+        btn.style('background-color', bgColor);
+        btn.style('color', '#ffffff');
+        btn.style('font-family', 'sans-serif');
+        btn.style('font-weight', 'bold');
+        btn.style('border', 'none');
+        btn.style('border-radius', '6px');
+        btn.style('cursor', 'pointer');
+        btn.style('font-size', '14px');
+        btn.style('transition', 'all 0.1s ease');
+        
+        btn.mouseOver(() => btn.style('filter', 'brightness(1.2)'));
+        btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudios Musicales - EMPA</title>
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --card-bg: #1e1e24;
+            --accent-purple: #6200ee;
+            --accent-blue: #63b3ed;
+            --text-main: #e2e8f0;
+            --text-muted: #a0aec0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            max-width: 450px;
+            width: 90%;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border: 1px solid #2a2a35;
+        }
+
+        .icon-container {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .institution {
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--accent-purple);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 28px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(98, 0, 238, 0.3);
+        }
+
+        .btn-link:hover {
+            background-color: #7722ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(98, 0, 238, 0.4);
+        }
+
+        .btn-link:active {
+            transform: translateY(0);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="icon-container">🎹</div>
+        <h1>Estudios Musicales</h1>
+        <div class="institution">EMPA • Escuela de Música Popular de Avellaneda</div>
+        
+        <p class="description">
+            Espacio personal dedicado al aprendizaje del lenguaje musical, la práctica instrumental y el desarrollo del entrenamiento auditivo en la música popular.
+        </p>
+
+        <!-- NOTA: Reemplazá 'juego.html' por la ruta real donde guardaste la web del juego -->
+        <a href="acordes.html" class="btn-link">🕹️ JUGAR: Entrenador de Acordes</a>
+    </div>
+
+</body>
+</html>
