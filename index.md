@@ -28,6 +28,6 @@ Explorá los contenidos multimedia, simulaciones y guías de las asignaturas:
 Fuera del laboratorio y las aulas, dedico mi tiempo a la música, el coleccionismo y el estudio de las ciencias naturales.
 
 * 📋 **[Conocé mi Bio y Trayectoria](./personal/#bio)**
-* 🎹 **[Estudios de Piano y Lenguaje Musical](./personal/#piano)**
+* 🎹 **[Estudios de Piano y Lenguaje Musical](./empa/empa.html)**
 * 💎 **[Colección de Minerales y Geología](./minerales/index.html)**
 * ✉️ **[Filatelia e Historia Postal](./personal/#filatelia)**
