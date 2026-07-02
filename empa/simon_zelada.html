@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZELADA Melodic Simon: Desafío de Oído (Pentacordio)</title>
+    <title>Melodic Simon: Desafío de Oído (Pentacordio)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
@@ -29,6 +29,9 @@
     let score = 0;
     let highscore = 0;
     let timerAnimacion = 0;
+    
+    // VARIABLE ANTI-REBOTE (Evita el doble toque fantasma en celulares)
+    let ultimoToque = 0; 
 
     let teclas = [];
     let btnFacil, btnDificil, btnVolver;
@@ -50,7 +53,7 @@
         btnVolver.size(130, 32);
         styleButton(btnVolver, '#2d3748');
         btnVolver.style('font-size', '11px');
-        btnVolver.mousePressed(() => { window.location.href = './empa.html'; });
+        btnVolver.mousePressed(() => { window.location.href = '../index.html'; });
 
         let anchoTecla = 90;
         let altoTecla = 240;
@@ -80,7 +83,7 @@
         fill('#e2e8f0');
         textSize(24);
         textStyle(BOLD);
-        text("ZELADA  SIMON", width / 2 + 60, 36);
+        text("MELODIC SIMON", width / 2 + 60, 36);
         
         textSize(13);
         textStyle(NORMAL);
@@ -165,11 +168,22 @@
         }
     }
 
+    // --- DETECTOR DE ENTRADA CON ANTI-REBOTE INTEGRADO ---
     function mousePressed() {
         if (gameState !== "USER_TURN") return;
+
+        // Si entran dos toques en menos de 300ms (clic fantasma móvil), el segundo se bloquea
+        if (millis() - ultimoToque < 300) {
+            return; 
+        }
+
         for (let i = 0; i < teclas.length; i++) {
             let t = teclas[i];
-            if (mouseX > t.x && mouseX < t.x + t.w && mouseY > t.y && mouseY < t.y + t.h) { handleUserinput(i); break; }
+            if (mouseX > t.x && mouseX < t.x + t.w && mouseY > t.y && mouseY < t.y + t.h) {
+                ultimoToque = millis(); // Guardamos la marca de tiempo del toque válido
+                handleUserinput(i);
+                break;
+            }
         }
     }
 
