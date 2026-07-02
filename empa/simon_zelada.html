@@ -30,14 +30,16 @@
     let highscore = 0;
     let timerAnimacion = 0;
     
-    // VARIABLE ANTI-REBOTE (Evita el doble toque fantasma en celulares)
     let ultimoToque = 0; 
 
     let teclas = [];
     let btnFacil, btnDificil, btnVolver;
 
     function setup() {
-        createCanvas(550, 650);
+        // RESPONSIVE: Calculamos el ancho ideal adaptado a pantallas chicas
+        let canvasW = min(550, windowWidth - 20);
+        let canvasH = min(650, windowHeight - 20);
+        createCanvas(canvasW, canvasH);
         textAlign(CENTER, CENTER);
 
         piano = new Tone.Sampler({
@@ -47,48 +49,84 @@
         }).toDestination();
         piano.volume.value = -2;
 
-        // BOTÓN VOLVER A LA WEB EMPA
+        // BOTÓN VOLVER (Ajuste fluido de posición)
         btnVolver = createButton('⬅ VOLVER A EMPA');
-        btnVolver.position(20, 20);
-        btnVolver.size(130, 32);
+        btnVolver.position(15, 15);
+        btnVolver.size(110, 28);
         styleButton(btnVolver, '#2d3748');
-        btnVolver.style('font-size', '11px');
+        btnVolver.style('font-size', '10px');
         btnVolver.mousePressed(() => { window.location.href = '../index.html'; });
 
-        let anchoTecla = 90;
-        let altoTecla = 240;
-        let inicioX = (width - (anchoTecla * 5)) / 2;
-        let yTecla = height / 2 - 40;
+        // Cálculo responsive de las teclas
+        calcularDimensionesTeclado();
 
-        for (let i = 0; i < 5; i++) {
-            teclas.push({ x: inicioX + (i * anchoTecla), y: yTecla, w: anchoTecla, h: altoTecla, nota: pentacordio[i], nombre: nombresNotas[i], color: coloresNotas[i] });
-        }
-
-        btnFacil = createButton('🟢 MODO FÁCIL (Visual)');
-        btnFacil.position(width / 2 - 190, height - 90);
-        btnFacil.size(180, 45);
+        // Inicialización de botones de modo (Posiciones dinámicas)
+        btnFacil = createButton('🟢 MODO FÁCIL');
         styleButton(btnFacil, '#2f855a');
         btnFacil.mousePressed(() => iniciarPartida("FACIL"));
 
-        btnDificil = createButton('🔴 MODO DIFÍCIL (Oído)');
-        btnDificil.position(width / 2 + 10, height - 90);
-        btnDificil.size(180, 45);
+        btnDificil = createButton('🔴 MODO DIFÍCIL');
         styleButton(btnDificil, '#9b2c2c');
         btnDificil.mousePressed(() => iniciarPartida("DIFICIL"));
+        
+        reposicionarBotonesModo();
+    }
+
+    function calcularDimensionesTeclado() {
+        teclas = [];
+        // El teclado ocupa el 90% del ancho del canvas
+        let anchoTotalTeclado = width * 0.92; 
+        let anchoTecla = anchoTotalTeclado / 5;
+        // El alto se adapta proporcionalmente al alto de pantalla
+        let altoTecla = height * 0.38; 
+        let inicioX = (width - anchoTotalTeclado) / 2;
+        let yTecla = height / 2 - 20;
+
+        for (let i = 0; i < 5; i++) {
+            teclas.push({ 
+                x: inicioX + (i * anchoTecla), 
+                y: yTecla, 
+                w: anchoTecla, 
+                h: altoTecla, 
+                nota: pentacordio[i], 
+                nombre: nombresNotas[i], 
+                color: coloresNotas[i] 
+            });
+        }
+    }
+
+    function reposicionarBotonesModo() {
+        // Centrado dinámico de botones según el tamaño del canvas actual
+        let canvasElement = min(550, windowWidth - 20);
+        let centerGrid = width / 2;
+        
+        let btnW = min(170, width * 0.42);
+        let btnH = 42;
+        let btnY = height - 75;
+
+        btnFacil.size(btnW, btnH);
+        btnFacil.position(windowWidth/2 - btnW - 8, btnY + (windowHeight - height)/2);
+        btnFacil.style('font-size', width < 400 ? '11px' : '13px');
+
+        btnDificil.size(btnW, btnH);
+        btnDificil.position(windowWidth/2 + 8, btnY + (windowHeight - height)/2);
+        btnDificil.style('font-size', width < 400 ? '11px' : '13px');
     }
 
     function draw() {
         background(18, 18, 24);
 
+        // Títulos adaptables en tamaño
         fill('#e2e8f0');
-        textSize(24);
+        textSize(width < 400 ? 20 : 24);
         textStyle(BOLD);
-        text("MELODIC SIMON", width / 2 + 60, 36);
+        // Desplazado sutilmente a la derecha para no pisar el botón volver si la pantalla es muy chica
+        text("MELODIC SIMON", width / 2 + (width < 400 ? 45 : 55), 30); 
         
-        textSize(13);
+        textSize(width < 400 ? 11 : 13);
         textStyle(NORMAL);
         fill('#a0aec0');
-        text("Pentacordio de Do • Práctica auditiva avanzada", width / 2, 75);
+        text("Pentacordio de Do • Práctica auditiva", width / 2, 70);
 
         drawScoreboard();
 
@@ -109,31 +147,55 @@
             if (debeIluminarse) fill(t.color);
             else fill(240);
             
-            stroke('#1a202c'); strokeWeight(4); rect(t.x, t.y, t.w, t.h, 0, 0, 8, 8);
+            stroke('#1a202c'); 
+            strokeWeight(width < 400 ? 3 : 4); 
+            rect(t.x, t.y, t.w, t.h, 0, 0, 8, 8);
+
             if (debeIluminarse) { fill(255); textStyle(BOLD); }
             else { fill('#4a5568'); textStyle(NORMAL); }
-            textSize(18); text(t.nombre, t.x + t.w / 2, t.y + t.h - 30);
+            
+            textSize(width < 400 ? 15 : 18); 
+            text(t.nombre, t.x + t.w / 2, t.y + t.h - 25);
         }
     }
 
     function drawScoreboard() {
-        stroke('#2d3748'); strokeWeight(2); fill(26, 26, 36); rect(75, 105, 400, 65, 8);
-        noStroke(); fill('#a0aec0'); textSize(11); text("NOTAS COMPLETADAS", 175, 125); text("RÉCORD MÁXIMO", 375, 125);
-        fill('#fff'); textSize(22); textStyle(BOLD); text(score, 175, 148); text(highscore, 375, 148); textStyle(NORMAL);
+        let boxW = width * 0.85;
+        let boxH = 55;
+        let boxX = (width - boxW) / 2;
+        let boxY = 95;
+
+        stroke('#2d3748'); strokeWeight(2); fill(26, 26, 36); 
+        rect(boxX, boxY, boxW, boxH, 8);
+        
+        noStroke(); fill('#a0aec0'); 
+        textSize(width < 400 ? 9 : 10); 
+        text("NOTAS COMPLETADAS", boxX + boxW * 0.28, boxY + 18); 
+        text("RÉCORD MÁXIMO", boxX + boxW * 0.72, boxY + 18);
+        
+        fill('#fff'); 
+        textSize(width < 400 ? 18 : 22); 
+        textStyle(BOLD); 
+        text(score, boxX + boxW * 0.28, boxY + 38); 
+        text(highscore, boxX + boxW * 0.72, boxY + 38); 
+        textStyle(NORMAL);
     }
 
     function drawMensajesEstado() {
-        noStroke(); textSize(15);
-        if (gameState === "LOADING") { fill('#ecc94b'); text("Conectando con el piano online... 🎹", width / 2, height / 2 - 75); }
-        else if (gameState === "START") { fill('#cbd5e0'); text("Elegí un nivel abajo para establecer el centro tonal...", width / 2, height / 2 - 75); }
-        else if (gameState === "TONIC_WARMUP") { fill('#ecc94b'); textStyle(BOLD); text("🔊 Estableciendo centro tonal: Escuchá la TÓNICA (DO)", width / 2, height / 2 - 75); textStyle(NORMAL); }
+        noStroke(); 
+        textSize(width < 400 ? 13 : 15);
+        let mensajeY = teclas[0].y - 30; // Posición relativa justo arriba del teclado
+
+        if (gameState === "LOADING") { fill('#ecc94b'); text("🎹 Conectando piano...", width / 2, mensajeY); }
+        else if (gameState === "START") { fill('#cbd5e0'); text("Elegí un nivel para empezar...", width / 2, mensajeY); }
+        else if (gameState === "TONIC_WARMUP") { fill('#ecc94b'); textStyle(BOLD); text("🔊 TÓNICA: Escuchá el DO", width / 2, mensajeY); textStyle(NORMAL); }
         else if (gameState === "PLAYING_SEQUENCE") {
             fill('#63b3ed');
-            if (gameMode === "FACIL") text("👀 Mirá y escuchá la secuencia...", width / 2, height / 2 - 75);
-            else text("👂 Escuchá con atención (Teclado oculto a ciegas)...", width / 2, height / 2 - 75);
+            if (gameMode === "FACIL") text("👀 Mirá y escuchá la secuencia...", width / 2, mensajeY);
+            else text("👂 Escuchá con atención...", width / 2, mensajeY);
         }
-        else if (gameState === "USER_TURN") { fill('#48bb78'); textStyle(BOLD); text(`🎹 ¡Tu turno! Toca de memoria (${pasosUsuario}/${secuencia.length})`, width / 2, height / 2 - 75); textStyle(NORMAL); }
-        else if (gameState === "GAME_OVER") { fill('#f56565'); textStyle(BOLD); text(`¡Nota incorrecta! Llegaste hasta la nota ${score} 😢`, width / 2, height / 2 - 75); textStyle(NORMAL); }
+        else if (gameState === "USER_TURN") { fill('#48bb78'); textStyle(BOLD); text(`🎹 ¡Tu turno! (${pasosUsuario}/${secuencia.length})`, width / 2, mensajeY); textStyle(NORMAL); }
+        else if (gameState === "GAME_OVER") { fill('#f56565'); textStyle(BOLD); text(`¡Incorrecto! Notas: ${score} 😢`, width / 2, mensajeY); textStyle(NORMAL); }
     }
 
     function iniciarPartida(modoSeleccionado) {
@@ -168,19 +230,14 @@
         }
     }
 
-    // --- DETECTOR DE ENTRADA CON ANTI-REBOTE INTEGRADO ---
     function mousePressed() {
         if (gameState !== "USER_TURN") return;
-
-        // Si entran dos toques en menos de 300ms (clic fantasma móvil), el segundo se bloquea
-        if (millis() - ultimoToque < 300) {
-            return; 
-        }
+        if (millis() - ultimoToque < 300) return; 
 
         for (let i = 0; i < teclas.length; i++) {
             let t = teclas[i];
             if (mouseX > t.x && mouseX < t.x + t.w && mouseY > t.y && mouseY < t.y + t.h) {
-                ultimoToque = millis(); // Guardamos la marca de tiempo del toque válido
+                ultimoToque = millis(); 
                 handleUserinput(i);
                 break;
             }
@@ -203,12 +260,22 @@
             gameState = "GAME_OVER"; notaActivaVisual = -1;
             btnFacil.show(); btnDificil.show();
             btnFacil.html('🟢 REINTENTAR FÁCIL'); btnDificil.html('🔴 REINTENTAR DIFÍCIL');
+            reposicionarBotonesModo();
         }
     }
 
     function styleButton(btn, bgColor) {
-        btn.style('background-color', bgColor); btn.style('color', '#ffffff'); btn.style('font-family', 'sans-serif'); btn.style('font-weight', 'bold'); btn.style('border', 'none'); btn.style('border-radius', '6px'); btn.style('cursor', 'pointer'); btn.style('font-size', '14px'); btn.style('transition', 'all 0.1s ease');
+        btn.style('background-color', bgColor); btn.style('color', '#ffffff'); btn.style('font-family', 'sans-serif'); btn.style('font-weight', 'bold'); btn.style('border', 'none'); btn.style('border-radius', '6px'); btn.style('cursor', 'pointer'); btn.style('transition', 'all 0.1s ease');
         btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
+    }
+
+    // LISTENER DE REDIMENSIONAMIENTO (Por si giran el celular)
+    function windowResized() {
+        let canvasW = min(550, windowWidth - 20);
+        let canvasH = min(650, windowHeight - 20);
+        resizeCanvas(canvasW, canvasH);
+        calcularDimensionesTeclado();
+        reposicionarBotonesModo();
     }
 </script>
 </body>

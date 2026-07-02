@@ -11,6 +11,7 @@
             --accent-purple: #6200ee;
             --accent-blue: #63b3ed;
             --accent-teal: #319795;
+            --accent-orange: #dd6b20; /* Color exclusivo para el módulo de intervalos */
             --text-main: #e2e8f0;
             --text-muted: #a0aec0;
         }
@@ -103,6 +104,16 @@
             box-shadow: 0 6px 18px rgba(49, 151, 149, 0.4);
         }
 
+        .btn-orange {
+            background-color: var(--accent-orange);
+            box-shadow: 0 4px 12px rgba(221, 107, 32, 0.3);
+        }
+        .btn-orange:hover {
+            background-color: #c05621;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(221, 107, 32, 0.4);
+        }
+
         .btn-link:active {
             transform: translateY(0);
         }
@@ -128,6 +139,7 @@
         <div class="button-group">
             <a href="./acordes.html" class="btn-link btn-purple">🕹️ Entrenador de Acordes (Tríadas)</a>
             <a href="./simon_zelada.html" class="btn-link btn-teal">🧠 Zelada Simón Melódico (Pentacordio)</a>
+            <a href="./intervalos.html" class="btn-link btn-orange">🎼 Katinvalo (Lectura y Oído)</a>
         </div>
     </div>
 

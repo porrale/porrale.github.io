@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KATINVALO: Reconocimiento de Intervalos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #0f0f13; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow: hidden; 
+        }
+        canvas { 
+            display: block; 
+            border-radius: 12px; 
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+<script>
+    p5.disableFriendlyErrors = true; 
+
+    // --- MOTOR DE AUDIO ---
+    let piano;
+    const posicionesFisicas = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5"];
+    
+    const alturasPentagrama = {
+        "C4": 0, "D4": 1, "E4": 2, "F4": 3, "G4": 4, "A4": 5, "B4": 6,
+        "C5": 7, "D5": 8, "E5": 9, "F5": 10
+    };
+
+    // Estructura actualizada con la propiedad 'textoRojo' para mostrar el nombre abajo si está alterada
+    const bancoIntervalos = [
+        { facil: "2da", dificil: "2da Menor", sonido: "Db4", visual: "D4", alteracion: "b", textoRojo: "Re b" },
+        { facil: "2da", dificil: "2da Mayor", sonido: "D4",  visual: "D4", alteracion: "",  textoRojo: "" },
+        { facil: "3ra", dificil: "3ra Menor", sonido: "Eb4", visual: "E4", alteracion: "b", textoRojo: "Mi b" },
+        { facil: "3ra", dificil: "3ra Mayor", sonido: "E4",  visual: "E4", alteracion: "",  textoRojo: "" },
+        { facil: "4ta", dificil: "4ta Justa", sonido: "F4",  visual: "F4", alteracion: "",  textoRojo: "" },
+        { facil: "4ta", dificil: "4ta Aumentada", sonido: "F#4", visual: "F4", alteracion: "#", textoRojo: "Fa #" },
+        { facil: "5ta", dificil: "5ta Justa", sonido: "G4",  visual: "G4", alteracion: "",  textoRojo: "" },
+        { facil: "6ta", dificil: "6ta Menor", sonido: "Ab4", visual: "A4", alteracion: "b", textoRojo: "La b" },
+        { facil: "6ta", dificil: "6ta Mayor", sonido: "A4",  visual: "A4", alteracion: "",  textoRojo: "" },
+        { facil: "7ma", dificil: "7ma Menor", sonido: "Bb4", visual: "B4", alteracion: "b", textoRojo: "Si b" },
+        { facil: "7ma", dificil: "7ma Mayor", sonido: "B4",  visual: "B4", alteracion: "",  textoRojo: "" }
+    ];
+
+    const nombresFaciles = ["2da", "3ra", "4ta", "5ta", "6ta", "7ma"];
+    const nombresDificiles = ["2da Menor", "2da Mayor", "3ra Menor", "3ra Mayor", "4ta Justa", "5ta Justa", "6ta Menor", "6ta Mayor", "7ma Menor", "7ma Mayor"];
+
+    // --- ESTADO DEL JUEGO ---
+    let gameState = "LOADING"; 
+    let gameMode = "FACIL"; 
+    let intervaloActual = null;
+    let opciones = [];
+    let feedbackText = "";
+    let feedbackColor;
+    let score = 0;
+    let highscore = 0;
+    let ultimoToque = 0; 
+
+    // --- INTERFAZ ---
+    let btnVolver, btnPlay, btnFacil, btnDificil;
+    let botonesOpciones = [];
+
+    function setup() {
+        createCanvas(550, 680);
+        textAlign(CENTER, CENTER);
+        
+        textFont("'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif");
+
+        piano = new Tone.Sampler({
+            urls: { "C4": "C4.mp3", "E4": "E4.mp3", "F#4": "Gb4.mp3", "A4": "A4.mp3" },
+            baseUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/acoustic_grand_piano-mp3/", 
+            onload: () => { gameState = "START"; }
+        }).toDestination();
+        piano.volume.value = -2;
+
+        btnVolver = createButton('⬅ VOLVER A EMPA');
+        btnVolver.position(20, 20);
+        btnVolver.size(130, 32);
+        styleButton(btnVolver, '#2d3748');
+        btnVolver.style('font-size', '11px');
+        btnVolver.mousePressed(() => { window.location.href = '../index.html'; });
+
+        btnFacil = createButton('🟢 FÁCIL (Genéricos)');
+        btnFacil.position(width / 2 - 190, 320);
+        btnFacil.size(180, 40);
+        styleButton(btnFacil, '#2f855a');
+        btnFacil.mousePressed(() => cambiarModo("FACIL"));
+
+        btnDificil = createButton('🔴 DIFÍCIL (Calificados)');
+        btnDificil.position(width / 2 + 10, 320);
+        btnDificil.size(180, 40);
+        styleButton(btnDificil, '#2d3748'); 
+        btnDificil.mousePressed(() => cambiarModo("DIFICIL"));
+
+        btnPlay = createButton('🔊 GENERAR INTERVALO');
+        btnPlay.position(width / 2 - 120, 380);
+        btnPlay.size(240, 45);
+        styleButton(btnPlay, '#6200ee');
+        btnPlay.mousePressed(handlePlayButton);
+        btnPlay.hide(); 
+
+        let btnW = 190;
+        let btnH = 50;
+        let posX = [width / 2 - 200, width / 2 + 10, width / 2 - 200, width / 2 + 10];
+        let posY = [490, 490, 555, 555];
+
+        for (let i = 0; i < 4; i++) {
+            let btn = createButton('');
+            btn.position(posX[i], posY[i]);
+            btn.size(btnW, btnH);
+            styleButton(btn, '#2d3748');
+            btn.style('font-size', '15px');
+            let index = i;
+            btn.mousePressed(() => verificarRespuesta(index));
+            btn.hide();
+            botonesOpciones.push(btn);
+        }
+
+        feedbackColor = color(255);
+    }
+
+    function draw() {
+        background(18, 18, 24);
+
+        // Títulos
+        fill('#e2e8f0');
+        textSize(24);
+        textStyle(BOLD);
+        text("KATINVALO QUEST", width / 2 + 60, 36);
+        
+        textSize(13);
+        textStyle(NORMAL);
+        fill('#a0aec0');
+        text(`Nivel: MODO ${gameMode} • Identificación auditiva y visual`, width / 2, 85);
+
+        drawScoreboard();
+        drawPentagrama();
+
+        if (gameState === "LOADING") {
+            fill('#ecc94b');
+            textSize(16);
+            text("Cargando cuerdas de piano... 🎹", width / 2, 450);
+        } else if (gameState === "START") {
+            fill('#cbd5e0');
+            textSize(15);
+            text("Seleccioná un nivel y presioná Generar para escuchar", width / 2, 450);
+            btnPlay.show();
+        } else if (gameState === "PLAYING") {
+            fill('#63b3ed');
+            textSize(16);
+            text("¿Qué intervalo está graficado?", width / 2, 450);
+        } else if (gameState === "ANSWERED") {
+            fill(feedbackColor);
+            textSize(18);
+            textStyle(BOLD);
+            text(feedbackText, width / 2, 450);
+            textStyle(NORMAL);
+        }
+    }
+
+    function cambiarModo(nuevoModo) {
+        gameMode = nuevoModo;
+        score = 0; 
+        if (gameMode === "FACIL") {
+            styleButton(btnFacil, '#2f855a');
+            styleButton(btnDificil, '#2d3748');
+        } else {
+            styleButton(btnFacil, '#2d3748');
+            styleButton(btnDificil, '#9b2c2c');
+        }
+        if (gameState !== "START" && gameState !== "LOADING") {
+            ocultarOpciones();
+            btnPlay.html('🔊 GENERAR INTERVALO');
+            styleButton(btnPlay, '#6200ee');
+            gameState = "START";
+        }
+    }
+
+    function drawPentagrama() {
+        let pY = 210; 
+        let espaciado = 14; 
+
+        stroke(240, 240, 240, 150);
+        strokeWeight(2);
+
+        // Las 5 líneas
+        for (let i = -2; i <= 2; i++) {
+            let y = pY + (i * espaciado);
+            line(70, y, width - 70, y);
+        }
+
+        // Líneas divisoras laterales
+        line(70, pY - (2 * espaciado), 70, pY + (2 * espaciado));
+        line(width - 70, pY - (2 * espaciado), width - 70, pY + (2 * espaciado));
+
+        if ((gameState === "PLAYING" || gameState === "ANSWERED") && intervaloActual) {
+            stroke(255);
+            fill(255);
+
+            let yLineaInferior = pY + (2 * espaciado); 
+            let indiceMi4 = 2; 
+
+            // --- NOTA 1: Tónica Inferior (Do4) ---
+            let yNota1 = yLineaInferior - (0 - indiceMi4) * (espaciado / 2);
+            strokeWeight(1);
+            ellipse(width / 2 - 20, yNota1, 15, 10); 
+            stroke(255); strokeWeight(2);
+            line(width / 2 - 35, yNota1, width / 2 - 5, yNota1);
+
+            // --- NOTA 2: Intervalo Destino ---
+            let h2 = alturasPentagrama[intervaloActual.visual];
+            let yNota2 = yLineaInferior - (h2 - indiceMi4) * (espaciado / 2);
+            strokeWeight(1);
+            fill(255);
+            stroke(255);
+            ellipse(width / 2 + 30, yNota2, 15, 10);
+
+            // --- ESCRIBIR TEXTO EXPLICATIVO ABAJO EN ROJO (Si está alterada) ---
+            if (intervaloActual.textoRojo !== "") {
+                noStroke();
+                fill('#ff4444');        // Color rojo nítido pedido
+                textSize(16);           // Tamaño ideal para texto de lectura
+                textStyle(BOLD);     
+                // Lo posiciona centrado debajo del óvalo blanco (+30 de X, +24 de Y)
+                text(intervaloActual.textoRojo, width / 2 + 30, yNota2 + 24);
+            }
+        }
+    }
+
+    function drawScoreboard() {
+        stroke('#2d3748'); strokeWeight(2); fill(26, 26, 36); rect(75, 105, 400, 65, 8);
+        noStroke(); fill('#a0aec0'); textSize(12); text("RACHA ACTUAL", 175, 125); text("MÁXIMO RÉCORD", 375, 125);
+        fill('#fff'); textSize(22); textStyle(BOLD); text(score, 175, 148); text(highscore, 375, 148); textStyle(NORMAL);
+    }
+
+    function handlePlayButton() {
+        if (gameState === "LOADING") return;
+        Tone.start();
+        if (gameState === "PLAYING") {
+            piano.triggerAttackRelease(["C4", intervaloActual.sonido], "2.5");
+        } else {
+            generarNuevoIntervalo();
+        }
+    }
+
+    function generarNuevoIntervalo() {
+        intervaloActual = random(bancoIntervalos);
+        piano.triggerAttackRelease(["C4", intervaloActual.sonido], "2.5");
+        armarOpciones();
+        btnPlay.html('🔁 REPETIR SONIDO');
+        styleButton(btnPlay, '#319795');
+        gameState = "PLAYING";
+    }
+
+    function armarOpciones() {
+        let correcta = (gameMode === "FACIL") ? intervaloActual.facil : intervaloActual.dificil;
+        let bolsaOpciones = (gameMode === "FACIL") ? nombresFaciles : nombresDificiles;
+
+        let distractores = bolsaOpciones.filter(item => item !== correcta);
+        distractores = shuffle(distractores);
+
+        opciones = [correcta, distractores[0], distractores[1], distractores[2]];
+        opciones = shuffle(opciones);
+
+        for (let i = 0; i < 4; i++) {
+            botonesOpciones[i].html(opciones[i]);
+            styleButton(botonesOpciones[i], '#2d3748'); 
+            botonesOpciones[i].show();
+        }
+    }
+
+    function verificarRespuesta(indiceBoton) {
+        if (gameState !== "PLAYING") return;
+        if (millis() - ultimoToque < 300) return;
+        ultimoToque = millis();
+
+        let respuestaUsuario = opciones[indiceBoton];
+        let correcta = (gameMode === "FACIL") ? intervaloActual.facil : intervaloActual.dificil;
+
+        if (respuestaUsuario === correcta) {
+            feedbackText = `¡CORRECTO! 🌟 Es una ${correcta}`;
+            feedbackColor = color('#48bb78');
+            score++;
+            if (score > highscore) highscore = score;
+            styleButton(botonesOpciones[indiceBoton], '#48bb78'); 
+        } else {
+            feedbackText = `INCORRECTO 😢 Era una ${correcta}`;
+            feedbackColor = color('#f56565');
+            score = 0;
+            styleButton(botonesOpciones[indiceBoton], '#f56565'); 
+        }
+
+        btnPlay.html('🔊 SIGUIENTE INTERVALO');
+        styleButton(btnPlay, '#6200ee');
+        gameState = "ANSWERED";
+    }
+
+    function ocultarOpciones() {
+        for (let i = 0; i < 4; i++) {
+            botonesOpciones[i].hide();
+        }
+    }
+
+    function styleButton(btn, bgColor) {
+        btn.style('background-color', bgColor); btn.style('color', '#ffffff'); btn.style('font-family', 'sans-serif'); btn.style('font-weight', 'bold'); btn.style('border', 'none'); btn.style('border-radius', '6px'); btn.style('cursor', 'pointer'); btn.style('transition', 'all 0.1s ease');
+        btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
+    }
+</script>
+</body>
+</html>
