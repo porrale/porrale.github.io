@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KX3GS3PD');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melodic Simon: Desafío de Oído (Pentacordio)</title>
+    <title>Zelada Simon: Desafío de Oído (Pentacordio)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
@@ -12,9 +20,15 @@
     </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX3GS3PD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <script>
     p5.disableFriendlyErrors = true; 
 
+    let canvasRef;
     let piano; 
     const pentacordio = ["C4", "D4", "E4", "F4", "G4"];
     const nombresNotas = ["DO", "RE", "MI", "FA", "SOL"];
@@ -36,10 +50,9 @@
     let btnFacil, btnDificil, btnVolver;
 
     function setup() {
-        // RESPONSIVE: Calculamos el ancho ideal adaptado a pantallas chicas
         let canvasW = min(550, windowWidth - 20);
         let canvasH = min(650, windowHeight - 20);
-        createCanvas(canvasW, canvasH);
+        canvasRef = createCanvas(canvasW, canvasH);
         textAlign(CENTER, CENTER);
 
         piano = new Tone.Sampler({
@@ -49,18 +62,16 @@
         }).toDestination();
         piano.volume.value = -2;
 
-        // BOTÓN VOLVER (Ajuste fluido de posición)
+        // BOTÓN VOLVER (Apunta directo a empa.html)
         btnVolver = createButton('⬅ VOLVER A EMPA');
-        btnVolver.position(15, 15);
         btnVolver.size(110, 28);
         styleButton(btnVolver, '#2d3748');
         btnVolver.style('font-size', '10px');
-        btnVolver.mousePressed(() => { window.location.href = '../index.html'; });
+        btnVolver.mousePressed(() => { window.location.href = 'empa.html'; });
 
-        // Cálculo responsive de las teclas
         calcularDimensionesTeclado();
 
-        // Inicialización de botones de modo (Posiciones dinámicas)
+        // Inicialización de botones de modo
         btnFacil = createButton('🟢 MODO FÁCIL');
         styleButton(btnFacil, '#2f855a');
         btnFacil.mousePressed(() => iniciarPartida("FACIL"));
@@ -74,10 +85,8 @@
 
     function calcularDimensionesTeclado() {
         teclas = [];
-        // El teclado ocupa el 90% del ancho del canvas
         let anchoTotalTeclado = width * 0.92; 
         let anchoTecla = anchoTotalTeclado / 5;
-        // El alto se adapta proporcionalmente al alto de pantalla
         let altoTecla = height * 0.38; 
         let inicioX = (width - anchoTotalTeclado) / 2;
         let yTecla = height / 2 - 20;
@@ -96,32 +105,32 @@
     }
 
     function reposicionarBotonesModo() {
-        // Centrado dinámico de botones según el tamaño del canvas actual
-        let canvasElement = min(550, windowWidth - 20);
-        let centerGrid = width / 2;
+        let cX = canvasRef.position().x;
+        let cY = canvasRef.position().y;
         
+        btnVolver.position(cX + 15, cY + 15);
+
         let btnW = min(170, width * 0.42);
         let btnH = 42;
-        let btnY = height - 75;
+        let btnY = height - 75; 
 
         btnFacil.size(btnW, btnH);
-        btnFacil.position(windowWidth/2 - btnW - 8, btnY + (windowHeight - height)/2);
+        btnFacil.position(cX + (width / 2) - btnW - 8, cY + btnY);
         btnFacil.style('font-size', width < 400 ? '11px' : '13px');
 
         btnDificil.size(btnW, btnH);
-        btnDificil.position(windowWidth/2 + 8, btnY + (windowHeight - height)/2);
+        btnDificil.position(cX + (width / 2) + 8, cY + btnY);
         btnDificil.style('font-size', width < 400 ? '11px' : '13px');
     }
 
     function draw() {
         background(18, 18, 24);
 
-        // Títulos adaptables en tamaño
+        // TÍTULO CORREGIDO: ZELADA SIMON
         fill('#e2e8f0');
-        textSize(width < 400 ? 20 : 24);
+        textSize(width < 400 ? 19 : 24);
         textStyle(BOLD);
-        // Desplazado sutilmente a la derecha para no pisar el botón volver si la pantalla es muy chica
-        text("MELODIC SIMON", width / 2 + (width < 400 ? 45 : 55), 30); 
+        text("ZELADA SIMON", width / 2 + (width < 400 ? 40 : 55), 30); 
         
         textSize(width < 400 ? 11 : 13);
         textStyle(NORMAL);
@@ -184,7 +193,7 @@
     function drawMensajesEstado() {
         noStroke(); 
         textSize(width < 400 ? 13 : 15);
-        let mensajeY = teclas[0].y - 30; // Posición relativa justo arriba del teclado
+        let mensajeY = teclas[0].y - 30;
 
         if (gameState === "LOADING") { fill('#ecc94b'); text("🎹 Conectando piano...", width / 2, mensajeY); }
         else if (gameState === "START") { fill('#cbd5e0'); text("Elegí un nivel para empezar...", width / 2, mensajeY); }
@@ -269,7 +278,6 @@
         btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
     }
 
-    // LISTENER DE REDIMENSIONAMIENTO (Por si giran el celular)
     function windowResized() {
         let canvasW = min(550, windowWidth - 20);
         let canvasH = min(650, windowHeight - 20);
