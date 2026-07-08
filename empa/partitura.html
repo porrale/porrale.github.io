@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KX3GS3PD');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flat.io Music Game</title>
+    <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #0f0f13;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 { margin-bottom: 5px; color: #63b3ed; text-transform: uppercase; font-size: 24px; }
+        .score-box {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: #1a1a24;
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 1px solid #2d3748;
+        }
+        #flat-embed-container {
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+        }
+        .btn-container {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 500px;
+        }
+        .btn-nota {
+            background-color: #2d3748;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .btn-nota:hover { background-color: #4a5568; }
+        .btn-nota:active { background-color: #3182ce; }
+        #feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX3GS3PD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<h1>Flat.io Guessing Game</h1>
+    <p style="color: #a0aec0; margin-top: 0;">¿Qué nota está escrita en el pentagrama?</p>
+
+    <div class="score-box">PUNTOS: <span id="score">0</span></div>
+
+    <div id="flat-embed-container"></div>
+
+    <div class="btn-container">
+        <button class="btn-nota" onclick="verificarRespuesta('C')">DO</button>
+        <button class="btn-nota" onclick="verificarRespuesta('D')">RE</button>
+        <button class="btn-nota" onclick="verificarRespuesta('E')">MI</button>
+        <button class="btn-nota" onclick="verificarRespuesta('F')">FA</button>
+        <button class="btn-nota" onclick="verificarRespuesta('G')">SOL</button>
+        <button class="btn-nota" onclick="verificarRespuesta('A')">LA</button>
+        <button class="btn-nota" onclick="verificarRespuesta('B')">SI</button>
+    </div>
+
+    <div id="feedback"></div>
+
+<script>
+    let embedPlayer;
+    let notaCorrectaActual = "";
+    let score = 0;
+
+    const notasPosibles = [
+        { nombre: "C", xml: '<note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "D", xml: '<note><pitch><step>D</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "E", xml: '<note><pitch><step>E</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "F", xml: '<note><pitch><step>F</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "G", xml: '<note><pitch><step>G</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "A", xml: '<note><pitch><step>A</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' },
+        { nombre: "B", xml: '<note><pitch><step>B</step><octave>4</octave></pitch><duration>4</duration><type>whole</type></note>' }
+    ];
+
+    window.onload = function() {
+        const container = document.getElementById('flat-embed-container');
+        
+        // Inicializamos con el string 'blank' estándar para que arme el iframe limpio y sin errores
+        embedPlayer = new Flat.Embed(container, {
+            score: 'blank',
+            embedParams: {
+                mode: 'viewer', 
+                controlsDisplay: false, 
+                controlsPlay: false,
+                branding: false
+            }
+        });
+
+        // Una vez que el iframe estéril está listo, le inyectamos la nota interactiva
+        embedPlayer.on('ready', function() {
+            generarNuevaPregunta();
+        });
+    };
+
+    function generarNuevaPregunta() {
+        let seleccionada = notasPosibles[Math.floor(Math.random() * notasPosibles.length)];
+        notaCorrectaActual = seleccionada.nombre;
+
+        let musicXML = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+        <score-partwise version="3.1">
+          <part-list>
+            <score-part id="P1"><part-name>Piano</part-name></score-part>
+          </part-list>
+          <part id="P1">
+            <measure number="1">
+              <attributes>
+                <divisions>1</divisions>
+                <key><fifths>0</fifths></key>
+                <time><beats>4</beats><beat-type>4</beat-type></time>
+                <clef><sign>G</sign><line>2</line></clef>
+              </attributes>
+              ${seleccionada.xml}
+            </measure>
+          </part>
+        </score-partwise>`;
+
+        embedPlayer.loadMusicXML(musicXML).catch(function(err) {
+            console.error("Error al inyectar MusicXML dinámico:", err);
+        });
+    }
+
+    function verificarRespuesta(notaPresionada) {
+        const feedbackDiv = document.getElementById('feedback');
+        
+        if (notaPresionada === notaCorrectaActual) {
+            score++;
+            document.getElementById('score').innerText = score;
+            feedbackDiv.style.color = '#48bb78';
+            feedbackDiv.innerText = "¡CORRECTO! 🌟";
+            
+            setTimeout(() => {
+                feedbackDiv.innerText = "";
+                generarNuevaPregunta();
+            }, 600);
+        } else {
+            feedbackDiv.style.color = '#f56565';
+            feedbackDiv.innerText = "INCORRECTO 😢 ¡Probá de nuevo!";
+        }
+    }
+</script>
+</body>
+</html>
