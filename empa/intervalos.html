@@ -1,36 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KX3GS3PD');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Katinvalo Quest: Reconocimiento de Intervalos</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
+        * { box-sizing: border-box; }
         body { 
             margin: 0; 
-            padding: 0; 
+            padding: 10px; 
             background-color: #0f0f13; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            overflow: hidden; 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+        }
+        #game-container {
+            position: relative;
+            display: inline-block;
+            border-radius: 14px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
         }
         canvas { 
             display: block; 
-            border-radius: 12px; 
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            border-radius: 14px;
+        }
+        .btn-game {
+            position: absolute;
+            font-family: inherit;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.08s ease, filter 0.12s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-game:active {
+            transform: scale(0.97);
         }
     </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KX3GS3PD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="game-container"></div>
+
 <script>
     p5.disableFriendlyErrors = true; 
 
-    // --- MOTOR DE AUDIO ---
     let piano;
     
     const posicionesFisicas = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5", "B5"];
@@ -70,9 +106,15 @@
     let botonesOpciones = [];
 
     function setup() {
-        createCanvas(550, 680);
+        let cW = min(500, windowWidth - 20);
+        let cH = min(680, windowHeight - 20);
+        
+        // Forzamos una altura mínima en pantallas chicas para que no se aprieten los botones
+        if (cH < 600) cH = 600;
+
+        let myCanvas = createCanvas(cW, cH);
+        myCanvas.parent('game-container');
         textAlign(CENTER, CENTER);
-        textFont("'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif");
 
         piano = new Tone.Sampler({
             urls: { "C4": "C4.mp3", "E4": "E4.mp3", "F#4": "Gb4.mp3", "A4": "A4.mp3" },
@@ -82,51 +124,42 @@
         piano.volume.value = -2;
 
         btnVolver = createButton('⬅ VOLVER A EMPA');
-        btnVolver.position(20, 20);
-        btnVolver.size(130, 32);
+        btnVolver.parent('game-container');
+        btnVolver.addClass('btn-game');
         styleButton(btnVolver, '#2d3748');
-        btnVolver.style('font-size', '11px');
         btnVolver.mousePressed(() => { window.location.href = './empa.html'; });
 
-        btnFacil = createButton('🟢 FÁCIL (Genéricos)');
-        btnFacil.position(width / 2 - 190, 320);
-        btnFacil.size(180, 40);
+        btnFacil = createButton('🟢 FÁCIL');
+        btnFacil.parent('game-container');
+        btnFacil.addClass('btn-game');
         styleButton(btnFacil, '#2f855a');
         btnFacil.mousePressed(() => cambiarModo("FACIL"));
 
-        btnDificil = createButton('🔴 DIFÍCIL (Calificados)');
-        btnDificil.position(width / 2 + 10, 320);
-        btnDificil.size(180, 40);
+        btnDificil = createButton('🔴 DIFÍCIL');
+        btnDificil.parent('game-container');
+        btnDificil.addClass('btn-game');
         styleButton(btnDificil, '#2d3748'); 
         btnDificil.mousePressed(() => cambiarModo("DIFICIL"));
 
-        // Botón principal Armónico / Generar
         btnPlay = createButton('🔊 GENERAR');
-        btnPlay.position(width / 2 - 200, 380);
-        btnPlay.size(190, 45);
+        btnPlay.parent('game-container');
+        btnPlay.addClass('btn-game');
         styleButton(btnPlay, '#6200ee');
         btnPlay.mousePressed(handlePlayButton);
         btnPlay.hide(); 
 
-        // Botón nuevo: Arpegio (Melódico)
         btnArpegio = createButton('🎶 ARPEGIAR');
-        btnArpegio.position(width / 2 + 10, 380);
-        btnArpegio.size(190, 45);
+        btnArpegio.parent('game-container');
+        btnArpegio.addClass('btn-game');
         styleButton(btnArpegio, '#d97706');
         btnArpegio.mousePressed(reproducirArpegiado);
         btnArpegio.hide();
 
-        let btnW = 190;
-        let btnH = 50;
-        let posX = [width / 2 - 200, width / 2 + 10, width / 2 - 200, width / 2 + 10];
-        let posY = [490, 490, 555, 555];
-
         for (let i = 0; i < 4; i++) {
             let btn = createButton('');
-            btn.position(posX[i], posY[i]);
-            btn.size(btnW, btnH);
+            btn.parent('game-container');
+            btn.addClass('btn-game');
             styleButton(btn, '#2d3748');
-            btn.style('font-size', '15px');
             let index = i;
             btn.mousePressed(() => verificarRespuesta(index));
             btn.hide();
@@ -134,46 +167,109 @@
         }
 
         feedbackColor = color(255);
+        reposicionarControles();
+    }
+
+    function reposicionarControles() {
+        let isMobile = width < 420;
+        let padX = width * 0.06;
+
+        // Botón Volver
+        btnVolver.position(padX, 14);
+        btnVolver.size(isMobile ? 105 : 125, 28);
+        btnVolver.style('font-size', isMobile ? '10px' : '11px');
+
+        // Botones de Modo (Modo Fácil / Difícil)
+        let anchoModo = (width - (padX * 2) - 10) / 2;
+        let yModo = height * 0.44;
+        let hModo = 38;
+
+        btnFacil.position(padX, yModo);
+        btnFacil.size(anchoModo, hModo);
+        btnFacil.style('font-size', isMobile ? '11px' : '13px');
+
+        btnDificil.position(padX + anchoModo + 10, yModo);
+        btnDificil.size(anchoModo, hModo);
+        btnDificil.style('font-size', isMobile ? '11px' : '13px');
+
+        // Botones de Reproducción
+        let yAudio = yModo + hModo + 14;
+        let hAudio = 42;
+
+        if (gameState === "START") {
+            let anchoPlaySolo = width - (padX * 2);
+            btnPlay.position(padX, yAudio);
+            btnPlay.size(anchoPlaySolo, hAudio);
+            btnPlay.style('font-size', isMobile ? '12px' : '14px');
+        } else {
+            let anchoAudio = (width - (padX * 2) - 10) / 2;
+            btnPlay.position(padX, yAudio);
+            btnPlay.size(anchoAudio, hAudio);
+            btnPlay.style('font-size', isMobile ? '11px' : '13px');
+
+            btnArpegio.position(padX + anchoAudio + 10, yAudio);
+            btnArpegio.size(anchoAudio, hAudio);
+            btnArpegio.style('font-size', isMobile ? '11px' : '13px');
+        }
+
+        // Grilla de Respuestas (2 filas x 2 columnas)
+        let anchoOpc = (width - (padX * 2) - 10) / 2;
+        let hOpc = isMobile ? 44 : 48;
+        let gapY = 8;
+        let yFila1 = height * 0.70;
+        let yFila2 = yFila1 + hOpc + gapY;
+
+        let posX = [padX, padX + anchoOpc + 10, padX, padX + anchoOpc + 10];
+        let posY = [yFila1, yFila1, yFila2, yFila2];
+
+        for (let i = 0; i < 4; i++) {
+            botonesOpciones[i].position(posX[i], posY[i]);
+            botonesOpciones[i].size(anchoOpc, hOpc);
+            botonesOpciones[i].style('font-size', isMobile ? '12px' : '14px');
+        }
     }
 
     function draw() {
         background(18, 18, 24);
 
+        let isMobile = width < 420;
+
+        // Título
         fill('#e2e8f0');
-        textSize(24);
+        textSize(isMobile ? 18 : 22);
         textStyle(BOLD);
-        text("Katinvalo QUEST", width / 2 + 60, 36);
+        text("Katinvalo QUEST", width / 2 + (isMobile ? 35 : 45), 28);
         
-        textSize(13);
+        // Subtítulo
+        textSize(isMobile ? 11 : 12);
         textStyle(NORMAL);
         fill('#a0aec0');
-        text(`Nivel: MODO ${gameMode} • Notas aleatorias de Do a Si`, width / 2, 85);
+        text(`Nivel: MODO ${gameMode} • Do a Si`, width / 2, 60);
 
         drawScoreboard();
         drawPentagrama();
 
+        // Texto de Estado / Feedback (Ubicado justo entre los controles de audio y las respuestas)
+        let yTextoFeedback = height * 0.63;
         if (gameState === "LOADING") {
             fill('#ecc94b');
-            textSize(16);
-            text("Cargando cuerdas de piano... 🎹", width / 2, 450);
+            textSize(isMobile ? 13 : 15);
+            text("Cargando piano... 🎹", width / 2, yTextoFeedback);
         } else if (gameState === "START") {
             fill('#cbd5e0');
-            textSize(15);
-            text("Seleccioná un nivel y presioná Generar para empezar", width / 2, 450);
-            btnPlay.position(width / 2 - 120, 380);
-            btnPlay.size(240, 45);
-            btnPlay.html('🔊 GENERAR INTERVALO');
+            textSize(isMobile ? 12 : 14);
+            text("Seleccioná un nivel y generá un intervalo", width / 2, yTextoFeedback);
             btnPlay.show();
             btnArpegio.hide();
         } else if (gameState === "PLAYING") {
             fill('#63b3ed');
-            textSize(16);
-            text("¿Qué intervalo está graficado?", width / 2, 450);
+            textSize(isMobile ? 13 : 15);
+            text("¿Qué intervalo está graficado?", width / 2, yTextoFeedback);
         } else if (gameState === "ANSWERED") {
             fill(feedbackColor);
-            textSize(18);
+            textSize(isMobile ? 14 : 16);
             textStyle(BOLD);
-            text(feedbackText, width / 2, 450);
+            text(feedbackText, width / 2, yTextoFeedback);
             textStyle(NORMAL);
         }
     }
@@ -194,28 +290,27 @@
             styleButton(btnPlay, '#6200ee');
             btnArpegio.hide();
             gameState = "START";
+            reposicionarControles();
         }
     }
 
     function drawPentagrama() {
-        let pY = 210; 
-        let espaciado = 14; 
+        let pY = height * 0.24; 
+        let espaciado = width < 420 ? 11 : 13; 
+        let margenX = width * 0.08;
 
         stroke(240, 240, 240, 150);
-        strokeWeight(2);
+        strokeWeight(1.5);
 
         for (let i = -2; i <= 2; i++) {
             let y = pY + (i * espaciado);
-            line(70, y, width - 70, y);
+            line(margenX, y, width - margenX, y);
         }
 
-        line(70, pY - (2 * espaciado), 70, pY + (2 * espaciado));
-        line(width - 70, pY - (2 * espaciado), width - 70, pY + (2 * espaciado));
+        line(margenX, pY - (2 * espaciado), margenX, pY + (2 * espaciado));
+        line(width - margenX, pY - (2 * espaciado), width - margenX, pY + (2 * espaciado));
 
         if (gameState === "PLAYING" || gameState === "ANSWERED") {
-            stroke(255);
-            fill(255);
-
             let yLineaInferior = pY + (2 * espaciado); 
             let indiceMi4 = 2; 
 
@@ -223,83 +318,92 @@
             let h1 = posicionesFisicas.indexOf(visualNota1);
             let yNota1 = yLineaInferior - (h1 - indiceMi4) * (espaciado / 2);
             strokeWeight(1); fill(255); stroke(255);
-            ellipse(width / 2 - 20, yNota1, 15, 10); 
+            ellipse(width / 2 - 25, yNota1, 14, 10); 
             
             if (visualNota1 === "C4") {
                 stroke(255); strokeWeight(2);
-                line(width / 2 - 35, yNota1, width / 2 - 5, yNota1);
+                line(width / 2 - 38, yNota1, width / 2 - 12, yNota1);
             }
 
             // Nota 2
             let h2 = posicionesFisicas.indexOf(visualNota2);
             let yNota2 = yLineaInferior - (h2 - indiceMi4) * (espaciado / 2);
             strokeWeight(1); fill(255); stroke(255);
-            ellipse(width / 2 + 30, yNota2, 15, 10);
+            ellipse(width / 2 + 25, yNota2, 14, 10);
 
             if (visualNota2 === "C4") {
                 stroke(255); strokeWeight(2);
-                line(width / 2 + 15, yNota2, width / 2 + 45, yNota2);
+                line(width / 2 + 12, yNota2, width / 2 + 38, yNota2);
             }
 
             if (gameMode === "DIFICIL" && textoAlteracionRojo !== "") {
                 noStroke();
                 fill('#ff4444');        
-                textSize(16);           
+                textSize(width < 420 ? 13 : 15);           
                 textStyle(BOLD);     
-                text(textoAlteracionRojo, width / 2 + 30, yNota2 + 24);
+                text(textoAlteracionRojo, width / 2 + 25, yNota2 + 20);
             }
         }
     }
 
     function drawScoreboard() {
-        stroke('#2d3748'); strokeWeight(2); fill(26, 26, 36); rect(75, 105, 400, 65, 8);
-        noStroke(); fill('#a0aec0'); textSize(12); text("RACHA ACTUAL", 175, 125); text("MÁXIMO RÉCORD", 375, 125);
-        fill('#fff'); textSize(22); textStyle(BOLD); text(score, 175, 148); text(highscore, 375, 148); textStyle(NORMAL);
+        let boxW = width * 0.88;
+        let boxH = 46;
+        let boxX = (width - boxW) / 2;
+        let boxY = 76;
+
+        stroke('#2d3748'); strokeWeight(1.5); fill(26, 26, 36); 
+        rect(boxX, boxY, boxW, boxH, 8);
+
+        noStroke(); fill('#a0aec0'); 
+        textSize(width < 420 ? 9 : 10); 
+        text("RACHA", boxX + boxW * 0.28, boxY + 15); 
+        text("RÉCORD", boxX + boxW * 0.72, boxY + 15);
+
+        fill('#fff'); 
+        textSize(width < 420 ? 17 : 20); 
+        textStyle(BOLD); 
+        text(score, boxX + boxW * 0.28, boxY + 33); 
+        text(highscore, boxX + boxW * 0.72, boxY + 33); 
+        textStyle(NORMAL);
     }
 
     function handlePlayButton() {
         if (gameState === "LOADING") return;
         Tone.start();
         if (gameState === "PLAYING") {
-            piano.triggerAttackRelease([sonidoNota1, sonidoNota2], "2.5");
+            piano.triggerAttackRelease([sonidoNota1, sonidoNota2], "2.0");
         } else {
             generarIntervaloTransportado();
         }
     }
 
-    // Reproducción melódica secuencial (grave -> aguda)
-// Reproducción melódica sucesiva y limpia (Primero nota 1, luego nota 2)
     function reproducirArpegiado() {
         if (gameState === "LOADING" || !sonidoNota1 || !sonidoNota2) return;
         Tone.start();
-
-        // 1. Toca primero la nota grave (duración: 0.7s)
         piano.triggerAttackRelease(sonidoNota1, "0.7");
-
-        // 2. Espera 800ms para disparar la segunda nota de forma sucesiva y clara
         setTimeout(() => {
             piano.triggerAttackRelease(sonidoNota2, "1.2");
         }, 800);
     }
 
-    // CLASIFICADOR MATEMÁTICO REAL DE INTERVALOS
     function clasificarIntervaloExacto(grados, semitonos) {
-        if (grados === 1) { // Segunda
+        if (grados === 1) { 
             if (semitonos === 1) return "2da Menor";
             if (semitonos === 2) return "2da Mayor";
-        } else if (grados === 2) { // Tercera
+        } else if (grados === 2) { 
             if (semitonos === 3) return "3ra Menor";
             if (semitonos === 4) return "3ra Mayor";
-        } else if (grados === 3) { // Cuarta
+        } else if (grados === 3) { 
             if (semitonos === 5) return "4ta Justa";
             if (semitonos === 6) return "4ta Aumentada";
-        } else if (grados === 4) { // Quinta
+        } else if (grados === 4) { 
             if (semitonos === 6) return "5ta Disminuida";
             if (semitonos === 7) return "5ta Justa";
-        } else if (grados === 5) { // Sexta
+        } else if (grados === 5) { 
             if (semitonos === 8) return "6ta Menor";
             if (semitonos === 9) return "6ta Mayor";
-        } else if (grados === 6) { // Séptima
+        } else if (grados === 6) { 
             if (semitonos === 9)  return "7ma Disminuida";
             if (semitonos === 10) return "7ma Menor";
             if (semitonos === 11) return "7ma Mayor";
@@ -347,20 +451,15 @@
             textoAlteracionRojo = "";
         }
 
-        piano.triggerAttackRelease([sonidoNota1, sonidoNota2], "2.5");
+        piano.triggerAttackRelease([sonidoNota1, sonidoNota2], "2.0");
         armarOpciones();
 
-        // Reposicionamos y mostramos ambos botones parejos
-        btnPlay.position(width / 2 - 200, 380);
-        btnPlay.size(190, 45);
         btnPlay.html('🔁 ARMÓNICO');
         styleButton(btnPlay, '#319795');
-
-        btnArpegio.position(width / 2 + 10, 380);
-        btnArpegio.size(190, 45);
         btnArpegio.show();
 
         gameState = "PLAYING";
+        reposicionarControles();
     }
 
     function armarOpciones() {
@@ -415,14 +514,16 @@
     function styleButton(btn, bgColor) {
         btn.style('background-color', bgColor); 
         btn.style('color', '#ffffff'); 
-        btn.style('font-family', 'sans-serif'); 
-        btn.style('font-weight', 'bold'); 
-        btn.style('border', 'none'); 
-        btn.style('border-radius', '6px'); 
-        btn.style('cursor', 'pointer'); 
-        btn.style('transition', 'all 0.1s ease');
-        btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); 
+        btn.mouseOver(() => btn.style('filter', 'brightness(1.18)')); 
         btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
+    }
+
+    function windowResized() {
+        let cW = min(500, windowWidth - 20);
+        let cH = min(680, windowHeight - 20);
+        if (cH < 600) cH = 600;
+        resizeCanvas(cW, cH);
+        reposicionarControles();
     }
 </script>
 </body>
