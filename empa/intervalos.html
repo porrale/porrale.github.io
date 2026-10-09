@@ -35,27 +35,19 @@
     
     const posicionesFisicas = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5", "B5"];
     const nombresNotasBasicas = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si", "Do", "Re", "Mi", "Fa", "Sol", "La", "Si"];
+    const semitonosNotaBase = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23];
 
-    // CORRECCIÓN: Se reparó el typo en la séptima mayor cambiando 'musician' por 'facil'
-    const tiposIntervalos = [
-        { semitonos: 1, grado: 1, facil: "2da", dificil: "2da Menor", alt: "b" },
-        { semitonos: 2, grado: 1, facil: "2da", dificil: "2da Mayor", alt: "" },
-        { semitonos: 3, grado: 2, facil: "3ra", dificil: "3ra Menor", alt: "b" },
-        { semitonos: 4, grado: 2, facil: "3ra", dificil: "3ra Mayor", alt: "" },
-        { semitonos: 5, grado: 3, facil: "4ta", dificil: "4ta Justa", alt: "" },
-        { semitonos: 6, grado: 3, facil: "4ta", dificil: "4ta Aumentada", alt: "#" },
-        { semitonos: 7, grado: 4, facil: "5ta", dificil: "5ta Justa", alt: "" },
-        { semitonos: 8, grado: 5, facil: "6ta", dificil: "6ta Menor", alt: "b" },
-        { semitonos: 9, grado: 5, facil: "6ta", dificil: "6ta Mayor", alt: "" },
-        { semitonos: 10, grado: 6, facil: "7ma", dificil: "7ma Menor", alt: "b" },
-        { semitonos: 11, grado: 6, facil: "7ma", dificil: "7ma Mayor", alt: "" }
-    ];
-
-    const mapaSemitonos = { 0:"C4", 1:"Db4", 2:"D4", 3:"Eb4", 4:"E4", 5:"F4", 6:"F#4", 7:"G4", 8:"Ab4", 9:"A4", 10:"Bb4", 11:"B4", 12:"C5", 13:"Db5", 14:"D5", 15:"Eb5", 16:"E5", 17:"F5", 18:"F#5", 19:"G5", 20:"Ab5", 21:"A5", 22:"Bb5", 23:"B5" };
-    const semitonosNotaBase = [0, 2, 4, 5, 7, 9, 11]; 
+    const mapaSemitonos = { 
+        0:"C4", 1:"Db4", 2:"D4", 3:"Eb4", 4:"E4", 5:"F4", 6:"F#4", 7:"G4", 8:"Ab4", 9:"A4", 10:"Bb4", 11:"B4", 
+        12:"C5", 13:"Db5", 14:"D5", 15:"Eb5", 16:"E5", 17:"F5", 18:"F#5", 19:"G5", 20:"Ab5", 21:"A5", 22:"Bb5", 23:"B5", 24:"C6" 
+    };
 
     const nombresFaciles = ["2da", "3ra", "4ta", "5ta", "6ta", "7ma"];
-    const nombresDificiles = ["2da Menor", "2da Mayor", "3ra Menor", "3ra Mayor", "4ta Justa", "4ta Aumentada", "5ta Justa", "6ta Menor", "6ta Mayor", "7ma Menor", "7ma Mayor"];
+    const nombresDificiles = [
+        "2da Menor", "2da Mayor", "3ra Menor", "3ra Mayor", 
+        "4ta Justa", "4ta Aumentada", "5ta Disminuida", "5ta Justa", 
+        "6ta Menor", "6ta Mayor", "7ma Disminuida", "7ma Menor", "7ma Mayor"
+    ];
 
     // --- ESTADO DEL JUEGO ---
     let gameState = "LOADING"; 
@@ -74,13 +66,12 @@
     let respuestaCorrectaDificil = "";
 
     // --- INTERFAZ ---
-    let btnVolver, btnPlay, btnFacil, btnDificil;
+    let btnVolver, btnPlay, btnArpegio, btnFacil, btnDificil;
     let botonesOpciones = [];
 
     function setup() {
         createCanvas(550, 680);
         textAlign(CENTER, CENTER);
-        
         textFont("'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif");
 
         piano = new Tone.Sampler({
@@ -109,12 +100,21 @@
         styleButton(btnDificil, '#2d3748'); 
         btnDificil.mousePressed(() => cambiarModo("DIFICIL"));
 
-        btnPlay = createButton('🔊 GENERAR INTERVALO');
-        btnPlay.position(width / 2 - 120, 380);
-        btnPlay.size(240, 45);
+        // Botón principal Armónico / Generar
+        btnPlay = createButton('🔊 GENERAR');
+        btnPlay.position(width / 2 - 200, 380);
+        btnPlay.size(190, 45);
         styleButton(btnPlay, '#6200ee');
         btnPlay.mousePressed(handlePlayButton);
         btnPlay.hide(); 
+
+        // Botón nuevo: Arpegio (Melódico)
+        btnArpegio = createButton('🎶 ARPEGIAR');
+        btnArpegio.position(width / 2 + 10, 380);
+        btnArpegio.size(190, 45);
+        styleButton(btnArpegio, '#d97706');
+        btnArpegio.mousePressed(reproducirArpegiado);
+        btnArpegio.hide();
 
         let btnW = 190;
         let btnH = 50;
@@ -159,8 +159,12 @@
         } else if (gameState === "START") {
             fill('#cbd5e0');
             textSize(15);
-            text("Seleccioná un nivel y presioná Generar para escuchar", width / 2, 450);
+            text("Seleccioná un nivel y presioná Generar para empezar", width / 2, 450);
+            btnPlay.position(width / 2 - 120, 380);
+            btnPlay.size(240, 45);
+            btnPlay.html('🔊 GENERAR INTERVALO');
             btnPlay.show();
+            btnArpegio.hide();
         } else if (gameState === "PLAYING") {
             fill('#63b3ed');
             textSize(16);
@@ -188,6 +192,7 @@
             ocultarOpciones();
             btnPlay.html('🔊 GENERAR INTERVALO');
             styleButton(btnPlay, '#6200ee');
+            btnArpegio.hide();
             gameState = "START";
         }
     }
@@ -262,25 +267,82 @@
         }
     }
 
+    // Reproducción melódica secuencial (grave -> aguda)
+// Reproducción melódica sucesiva y limpia (Primero nota 1, luego nota 2)
+    function reproducirArpegiado() {
+        if (gameState === "LOADING" || !sonidoNota1 || !sonidoNota2) return;
+        Tone.start();
+
+        // 1. Toca primero la nota grave (duración: 0.7s)
+        piano.triggerAttackRelease(sonidoNota1, "0.7");
+
+        // 2. Espera 800ms para disparar la segunda nota de forma sucesiva y clara
+        setTimeout(() => {
+            piano.triggerAttackRelease(sonidoNota2, "1.2");
+        }, 800);
+    }
+
+    // CLASIFICADOR MATEMÁTICO REAL DE INTERVALOS
+    function clasificarIntervaloExacto(grados, semitonos) {
+        if (grados === 1) { // Segunda
+            if (semitonos === 1) return "2da Menor";
+            if (semitonos === 2) return "2da Mayor";
+        } else if (grados === 2) { // Tercera
+            if (semitonos === 3) return "3ra Menor";
+            if (semitonos === 4) return "3ra Mayor";
+        } else if (grados === 3) { // Cuarta
+            if (semitonos === 5) return "4ta Justa";
+            if (semitonos === 6) return "4ta Aumentada";
+        } else if (grados === 4) { // Quinta
+            if (semitonos === 6) return "5ta Disminuida";
+            if (semitonos === 7) return "5ta Justa";
+        } else if (grados === 5) { // Sexta
+            if (semitonos === 8) return "6ta Menor";
+            if (semitonos === 9) return "6ta Mayor";
+        } else if (grados === 6) { // Séptima
+            if (semitonos === 9)  return "7ma Disminuida";
+            if (semitonos === 10) return "7ma Menor";
+            if (semitonos === 11) return "7ma Mayor";
+        }
+        return null;
+    }
+
     function generarIntervaloTransportado() {
         let indiceBase = Math.floor(random(0, 7)); 
         visualNota1 = posicionesFisicas[indiceBase];
         let semitonosBase = semitonosNotaBase[indiceBase];
         sonidoNota1 = mapaSemitonos[semitonosBase];
 
-        let tipo = random(tiposIntervalos);
-        respuestaCorrectaFacil = tipo.facil;
-        respuestaCorrectaDificil = tipo.dificil;
+        let saltoGrado = Math.floor(random(1, 7));
+        let nombresGenericos = { 1: "2da", 2: "3ra", 3: "4ta", 4: "5ta", 5: "6ta", 6: "7ma" };
+        respuestaCorrectaFacil = nombresGenericos[saltoGrado];
 
-        let indiceVisualDestino = indiceBase + tipo.grado;
+        let indiceVisualDestino = indiceBase + saltoGrado;
         visualNota2 = posicionesFisicas[indiceVisualDestino];
         let nombreNotaDestinoBase = nombresNotasBasicas[indiceVisualDestino];
 
-        let semitonosDestino = semitonosBase + tipo.semitonos;
+        let clasificacion = null;
+        let altElegida = "";
+        let semitonosDestino = 0;
+
+        while (clasificacion === null) {
+            altElegida = (gameMode === "DIFICIL") ? random(["", "b", "#"]) : "";
+            
+            let modSemitonos = 0;
+            if (altElegida === "b") modSemitonos = -1;
+            if (altElegida === "#") modSemitonos = 1;
+
+            semitonosDestino = semitonosNotaBase[indiceVisualDestino] + modSemitonos;
+            let semitonosDiferencia = semitonosDestino - semitonosBase;
+
+            clasificacion = clasificarIntervaloExacto(saltoGrado, semitonosDiferencia);
+        }
+
+        respuestaCorrectaDificil = clasificacion;
         sonidoNota2 = mapaSemitonos[semitonosDestino];
 
-        if (tipo.alt !== "") {
-            textoAlteracionRojo = `${nombreNotaDestinoBase} ${tipo.alt}`;
+        if (altElegida !== "") {
+            textoAlteracionRojo = `${nombreNotaDestinoBase} ${altElegida}`;
         } else {
             textoAlteracionRojo = "";
         }
@@ -288,8 +350,16 @@
         piano.triggerAttackRelease([sonidoNota1, sonidoNota2], "2.5");
         armarOpciones();
 
-        btnPlay.html('🔁 REPETIR SONIDO');
+        // Reposicionamos y mostramos ambos botones parejos
+        btnPlay.position(width / 2 - 200, 380);
+        btnPlay.size(190, 45);
+        btnPlay.html('🔁 ARMÓNICO');
         styleButton(btnPlay, '#319795');
+
+        btnArpegio.position(width / 2 + 10, 380);
+        btnArpegio.size(190, 45);
+        btnArpegio.show();
+
         gameState = "PLAYING";
     }
 
@@ -331,7 +401,7 @@
             styleButton(botonesOpciones[indiceBoton], '#f56565'); 
         }
 
-        btnPlay.html('🔊 SIGUIENTE INTERVALO');
+        btnPlay.html('🔊 SIGUIENTE');
         styleButton(btnPlay, '#6200ee');
         gameState = "ANSWERED";
     }
@@ -343,8 +413,16 @@
     }
 
     function styleButton(btn, bgColor) {
-        btn.style('background-color', bgColor); btn.style('color', '#ffffff'); btn.style('font-family', 'sans-serif'); btn.style('font-weight', 'bold'); btn.style('border', 'none'); btn.style('border-radius', '6px'); btn.style('cursor', 'pointer'); btn.style('transition', 'all 0.1s ease');
-        btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
+        btn.style('background-color', bgColor); 
+        btn.style('color', '#ffffff'); 
+        btn.style('font-family', 'sans-serif'); 
+        btn.style('font-weight', 'bold'); 
+        btn.style('border', 'none'); 
+        btn.style('border-radius', '6px'); 
+        btn.style('cursor', 'pointer'); 
+        btn.style('transition', 'all 0.1s ease');
+        btn.mouseOver(() => btn.style('filter', 'brightness(1.2)')); 
+        btn.mouseOut(() => btn.style('filter', 'brightness(1.0)'));
     }
 </script>
 </body>
